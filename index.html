@@ -1,0 +1,2056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JS Concepts — 30 Chapter Interactive Course</title>
+<style>
+:root{
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+  --mono:'SF Mono','Fira Code','Cascadia Code',monospace;
+  --r-lg:10px;--r-md:7px;
+  --bg:#FAFAF9;--bg2:#F3F2F0;--bg3:#FFFFFF;
+  --bd:#E5E4E1;--bd2:#D0CFC9;
+  --tx:#1A1A18;--tx2:#4A4A46;--tx3:#8A8A84;
+  --purple:#7F77DD;--purple-bg:#EEEDFE;--purple-dk:#3C3489;
+  --green:#1D9E75;--green-bg:#E1F5EE;--green-dk:#085041;
+  --orange:#EF9F27;--orange-bg:#FAEEDA;--orange-dk:#633806;
+  --red:#D85A30;--red-bg:#FAECE7;--red-dk:#712B13;
+  --blue:#2563EB;--blue-bg:#EFF6FF;--blue-bd:#BFDBFE;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1C1C1A;--bg2:#242422;--bg3:#2C2C2A;
+  --bd:#3A3A36;--bd2:#4A4A46;
+  --tx:#E8E8E4;--tx2:#B0B0AA;--tx3:#707068;
+  --purple-bg:#26215C;--purple-dk:#CECBF6;
+  --green-bg:#04342C;--green-dk:#9FE1CB;
+  --orange-bg:#412402;--orange-dk:#FAC775;
+  --red-bg:#4A1B0C;--red-dk:#F5C4B3;
+  --blue:#85C1E9;--blue-bg:#0D2137;--blue-bd:#2E86C1;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);font-size:13px;color:var(--tx);background:var(--bg);height:100vh;overflow:hidden;display:flex;flex-direction:column}
+
+/* TOP NAV */
+.topnav{display:flex;align-items:center;gap:0;background:var(--bg2);border-bottom:0.5px solid var(--bd);flex-shrink:0;padding:0 16px;height:44px}
+.app-title{font-size:14px;font-weight:600;color:var(--tx);margin-right:16px;white-space:nowrap}
+.ch-tabs{display:flex;gap:2px;overflow-x:auto;flex:1;padding:6px 0;scrollbar-width:none}
+.ch-tabs::-webkit-scrollbar{display:none}
+.ch-tab{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;white-space:nowrap;color:var(--tx3);transition:all .13s;border:0.5px solid transparent;flex-shrink:0}
+.ch-tab:hover{background:var(--bg3);color:var(--tx)}
+.ch-tab.active{background:var(--purple-bg);color:var(--purple-dk);border-color:var(--purple)}
+.ch-tab.done{color:var(--tx2)}
+.progress-pill{font-size:11px;color:var(--tx3);white-space:nowrap;margin-left:8px;flex-shrink:0}
+
+/* MAIN SPLIT */
+.content{display:flex;flex:1;overflow:hidden}
+.sidebar{width:200px;flex-shrink:0;background:var(--bg2);border-right:0.5px solid var(--bd);overflow-y:auto;padding:8px 0}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:2px}
+.sideitem{display:flex;align-items:center;gap:8px;padding:7px 12px;cursor:pointer;border-left:2px solid transparent;transition:background .12s}
+.sideitem:hover{background:var(--bg3)}
+.sideitem.active{background:var(--bg3);border-left-color:var(--purple)}
+.si-num{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;flex-shrink:0;background:var(--bd);color:var(--tx2)}
+.sideitem.done .si-num{background:var(--green);color:#fff}
+.sideitem.active .si-num{background:var(--purple);color:#fff}
+.si-info{flex:1;min-width:0}
+.si-title{font-size:11px;font-weight:500;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.si-tag{font-size:9.5px;color:var(--tx3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.main-header{padding:12px 18px;border-bottom:0.5px solid var(--bd);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.ch-badge{padding:2px 9px;border-radius:99px;font-size:11px;font-weight:500;background:var(--purple-bg);color:var(--purple-dk);flex-shrink:0}
+.main-title{font-size:14px;font-weight:500}
+.main-body{flex:1;overflow-y:auto;padding:16px 18px}
+.main-body::-webkit-scrollbar{width:5px}
+.main-body::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:3px}
+
+.concept-box{background:var(--bg2);border:0.5px solid var(--bd);border-radius:var(--r-lg);padding:12px 14px;margin-bottom:14px}
+.concept-label{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--tx3);margin-bottom:4px}
+.concept-text{font-size:12.5px;line-height:1.75;color:var(--tx2)}
+.concept-text strong{font-weight:500;color:var(--tx)}
+.concept-text code{font-family:var(--mono);font-size:11px;background:var(--bd);padding:1px 4px;border-radius:3px}
+.concept-text em{font-style:italic}
+
+.callout{border-radius:var(--r-md);padding:9px 12px;margin-bottom:13px;font-size:12px;line-height:1.6}
+.callout-purple{background:var(--purple-bg);color:var(--purple-dk);border:0.5px solid #AFA9EC}
+.callout-green{background:var(--green-bg);color:var(--green-dk);border:0.5px solid #5DCAA5}
+.callout-orange{background:var(--orange-bg);color:var(--orange-dk);border:0.5px solid var(--orange)}
+
+.ref-row{display:flex;gap:7px;margin-bottom:13px;flex-wrap:wrap}
+.ref-card{flex:1;min-width:110px;padding:7px 9px;border-radius:var(--r-md);border:0.5px solid var(--bd);background:var(--bg2)}
+.ref-lbl{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}
+.ref-title{font-size:12px;font-weight:500;color:var(--tx)}
+.ref-sub{font-size:10.5px;color:var(--tx3);margin-top:1px;line-height:1.4;font-family:var(--mono)}
+
+.ex-nav{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.ex-arrow{width:24px;height:24px;border-radius:50%;border:0.5px solid var(--bd2);background:transparent;color:var(--tx3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .13s;flex-shrink:0}
+.ex-arrow:hover:not(:disabled){background:var(--bg2);color:var(--tx)}
+.ex-arrow:disabled{opacity:.25;cursor:not-allowed}
+.ex-name{font-size:13px;font-weight:500}
+.ex-counter{font-size:11px;color:var(--tx3);margin-left:5px}
+.ex-desc{font-size:12px;color:var(--tx2);line-height:1.65;margin-bottom:11px}
+.ex-desc code{font-family:var(--mono);font-size:11px;background:var(--bd);padding:1px 4px;border-radius:3px}
+.ex-desc em{font-style:italic}
+
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.leg-item{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--tx2)}
+.leg-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+
+.step-bar{display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--bg2);border-radius:var(--r-md);border:0.5px solid var(--bd);margin-bottom:7px}
+.sdots{display:flex;gap:4px;flex:1;flex-wrap:wrap}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--bd2);transition:background .2s;flex-shrink:0}
+.sdot.done{background:var(--purple)}.sdot.cur{background:var(--orange)}
+.sctr{font-size:11px;font-weight:500;color:var(--tx3);white-space:nowrap}
+.sdesc{font-size:11px;color:var(--tx2);text-align:right;min-width:100px}
+
+.nav-row{display:flex;gap:6px;align-items:center;margin-bottom:11px}
+.sp{flex:1}
+.btn{padding:6px 14px;border-radius:var(--r-md);border:0.5px solid var(--bd2);background:transparent;color:var(--tx);font-size:12px;cursor:pointer;transition:all .13s;font-family:var(--sans)}
+.btn:hover:not(:disabled){background:var(--bg2)}
+.btn:active:not(:disabled){transform:scale(.98)}
+.btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.btn-p{background:var(--blue-bg);color:var(--blue);border-color:var(--blue-bd)}
+.btn-p:hover:not(:disabled){opacity:.85}
+
+.grid4{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:520px){.grid4{grid-template-columns:1fr}}
+.panel{background:var(--bg3);border:0.5px solid var(--bd);border-radius:var(--r-lg);padding:10px 12px;min-height:120px}
+.ptitle{font-size:10px;font-weight:500;color:var(--tx3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.pdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+
+.code-block{background:var(--bg2);border:0.5px solid var(--bd);border-radius:var(--r-md);padding:7px 9px;font-family:var(--mono);font-size:10.5px;line-height:1.7;white-space:pre;overflow-x:auto}
+.kw{color:#8B5CF6;font-weight:500}.fn{color:#185FA5}.str{color:#059669}.cm{color:var(--tx3);font-style:italic}
+.hl{background:var(--orange-bg);border-radius:2px;transition:background .2s}
+
+.cstack{display:flex;flex-direction:column-reverse;gap:3px;min-height:80px}
+.frame{padding:4px 8px;border-radius:var(--r-md);font-family:var(--mono);font-size:11px;font-weight:500;border:0.5px solid transparent;transition:all .22s;opacity:0;transform:translateY(4px)}
+.frame.show{opacity:1;transform:translateY(0)}
+.f-global{background:#F1EFE8;color:#444441;border-color:#B4B2A9}
+.f-hof{background:var(--purple-bg);color:var(--purple-dk);border-color:#AFA9EC}
+.f-cb{background:var(--green-bg);color:var(--green-dk);border-color:#5DCAA5}
+.f-active{background:var(--orange-bg);color:var(--orange-dk);border-color:var(--orange)}
+.f-special{background:var(--red-bg);color:var(--red-dk);border-color:#F0997B}
+@media(prefers-color-scheme:dark){.f-global{background:#2C2C2A;color:#D3D1C7;border-color:#5F5E5A}}
+
+.dflow{display:flex;flex-direction:column;gap:3px;min-height:80px;max-height:180px;overflow-y:auto}
+.ditem{display:flex;align-items:flex-start;gap:5px;padding:3px 6px;border-radius:var(--r-md);font-family:var(--mono);font-size:10px;opacity:0;transform:translateX(-4px);transition:all .2s;line-height:1.5}
+.ditem.show{opacity:1;transform:translateX(0)}
+.dicon{flex-shrink:0;width:12px;height:12px;border-radius:2px;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:500}
+.dtxt{flex:1;word-break:break-word}
+.d-input{background:var(--bg2);color:var(--tx)}
+.d-input .dicon{background:var(--bd2);color:var(--tx3)}
+.d-transform{background:var(--green-bg);color:var(--green-dk)}
+.d-transform .dicon{background:#5DCAA5;color:#04342C}
+.d-output{background:var(--purple-bg);color:var(--purple-dk)}
+.d-output .dicon{background:#AFA9EC;color:#26215C}
+.d-special{background:var(--red-bg);color:var(--red-dk)}
+.d-special .dicon{background:var(--red);color:#fff}
+.log-item{background:var(--bg2);color:var(--tx)}
+.log-purple{border-left:2px solid var(--purple)}.log-purple .dicon{background:var(--purple);color:#fff}
+.log-green{border-left:2px solid var(--green)}.log-green .dicon{background:var(--green);color:#fff}
+.log-orange{border-left:2px solid #BA7517}.log-orange .dicon{background:#BA7517;color:#fff}
+.log-red{border-left:2px solid var(--red)}.log-red .dicon{background:var(--red);color:#fff}
+.df-div{height:.5px;background:var(--bd);margin:3px 0}
+.df-lbl{font-size:9px;font-weight:500;color:var(--tx3);text-transform:uppercase;letter-spacing:.04em;padding:1px 0 2px}
+
+.memsec{margin-bottom:6px}
+.memtitle{font-size:9px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;margin-bottom:3px;padding:1px 5px;border-radius:3px;display:inline-block}
+.mt-global{background:var(--red-bg);color:var(--red-dk)}
+.mt-local{background:var(--green-bg);color:var(--green-dk)}
+.mt-closure{background:var(--purple-bg);color:var(--purple-dk)}
+@media(prefers-color-scheme:dark){
+  .mt-global{background:#4A1B0C;color:#F5C4B3}
+  .mt-local{background:#04342C;color:#9FE1CB}
+  .mt-closure{background:#26215C;color:#CECBF6}
+}
+.memrows{display:flex;flex-direction:column;gap:2px}
+.memrow{display:flex;align-items:center;font-family:var(--mono);font-size:10px;border-radius:3px;overflow:hidden;opacity:0;transition:all .2s;transform:translateX(-3px)}
+.memrow.show{opacity:1;transform:translateX(0)}
+.memkey{padding:2px 5px;background:var(--bg2);color:var(--tx2);border-right:.5px solid var(--bd);min-width:60px;font-weight:500;flex-shrink:0;font-size:10px}
+.memval{padding:2px 6px;color:var(--tx);background:var(--bg3);flex:1;font-size:10px}
+.mv-new{color:var(--purple-dk);font-weight:500}
+.mv-changed{color:var(--green-dk);font-weight:500}
+.mv-special{color:var(--red-dk);font-weight:500}
+@media(prefers-color-scheme:dark){.mv-new{color:#AFA9EC}.mv-changed{color:#5DCAA5}.mv-special{color:#F5C4B3}}
+.mem-empty{font-size:10px;color:var(--tx3);font-style:italic;padding:2px 0}
+
+/* Mobile sidebar toggle */
+@media(max-width:700px){.sidebar{display:none}.sidebar.open{display:block;position:fixed;left:0;top:44px;bottom:0;z-index:100;box-shadow:2px 0 12px rgba(0,0,0,.15)}}
+.menu-btn{display:none;background:transparent;border:none;cursor:pointer;font-size:18px;color:var(--tx);padding:0 8px}
+@media(max-width:700px){.menu-btn{display:block}}
+</style>
+</head>
+<body>
+<div class="topnav">
+  <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+  <span class="app-title">JS Concepts</span>
+  <div class="ch-tabs" id="ch-tabs"></div>
+  <span class="progress-pill" id="prog-pill">30 chapters</span>
+</div>
+<div class="content">
+  <div class="sidebar" id="sidebar">
+    <div id="side-list"></div>
+  </div>
+  <div class="main">
+    <div class="main-header">
+      <span class="ch-badge" id="hdr-badge">Ch. 1</span>
+      <span class="main-title" id="hdr-title"></span>
+    </div>
+    <div class="main-body" id="main-body">
+      <div class="concept-box"><div class="concept-label">Concept</div><div class="concept-text" id="concept-text"></div></div>
+      <div id="callout-area"></div>
+      <div id="ref-area"></div>
+      <div class="ex-nav">
+        <button class="ex-arrow" id="ex-prev" onclick="switchEx(-1)" disabled>&#8592;</button>
+        <div style="flex:1"><span class="ex-name" id="ex-name"></span><span class="ex-counter" id="ex-ctr"></span></div>
+        <button class="ex-arrow" id="ex-next" onclick="switchEx(1)">&#8594;</button>
+      </div>
+      <div class="ex-desc" id="ex-desc"></div>
+      <div class="legend" id="legend"></div>
+      <div class="step-bar">
+        <div class="sdots" id="sdots"></div>
+        <span class="sctr" id="sctr">0/0</span>
+        <span class="sdesc" id="sdesc">Press Next</span>
+      </div>
+      <div class="nav-row">
+        <button class="btn" id="btn-prev" onclick="nav(-1)" disabled>← Prev</button>
+        <button class="btn btn-p" id="btn-next" onclick="nav(1)">Next →</button>
+        <div class="sp"></div>
+        <button class="btn" id="btn-auto" onclick="autoPlay()">Auto-play</button>
+      </div>
+      <div class="grid4">
+        <div class="panel"><div class="ptitle"><div class="pdot" style="background:var(--purple)"></div>Code</div><div class="code-block" id="card-code" style="min-height:80px"></div></div>
+        <div class="panel"><div class="ptitle"><div class="pdot" style="background:var(--green)"></div>Call stack</div><div class="cstack" id="card-stack"></div></div>
+        <div class="panel"><div class="ptitle"><div class="pdot" style="background:#BA7517"></div>Data flow &amp; console</div><div class="dflow" id="card-flow"></div></div>
+        <div class="panel"><div class="ptitle"><div class="pdot" style="background:var(--red)"></div><span id="mem-panel-title">Memory</span></div><div id="card-mem"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const CHAPTERS = [
+{num:1,title:"Execution context",tag:"global · local · thread of execution",
+concept:"Every time JavaScript runs code it creates an <strong>execution context</strong> — a wrapper containing the code being run and the memory space for its variables. There are two kinds: the <strong>Global Execution Context (GEC)</strong> created automatically when a script starts, and a <strong>Local Execution Context</strong> created fresh every time a function is <em>called</em>. Each context has two phases: a memory phase (variables hoisted, set to <code>undefined</code>) and an execution phase (code runs line by line). The <strong>thread of execution</strong> is JS's single worker — it can only do one thing at a time.",
+callout:null,
+refs:[
+  {lbl:"GEC",cls:"",title:"Global context",sub:"created on script start"},
+  {lbl:"Local",cls:"",title:"Per function call",sub:"created on each call"},
+  {lbl:"Thread",cls:"",title:"Single-threaded",sub:"one thing at a time"},
+],
+memPanelTitle:"Variable environment",
+legend:[
+  {color:"var(--purple)",label:"Global scope"},
+  {color:"var(--green)",label:"Local scope"},
+  {color:"var(--orange)",label:"Currently executing"},
+],
+examples:[{
+  name:"Global vs local execution context",
+  desc:"The GEC holds globally-scoped variables. Each function call creates its own local context with its own variable environment. When the function returns, its context is destroyed.",
+  code:`<span class="kw">const</span> <span id="gc0">num</span> = 3;
+
+<span class="kw">function</span> <span id="gc1">multiplyBy2</span>(inputNumber) {
+  <span class="kw">const</span> <span id="gc2">result</span> = inputNumber * 2;
+  <span class="kw">return</span> result;
+}
+
+<span class="kw">const</span> <span id="gc3">output</span> = multiplyBy2(num);
+<span class="kw">const</span> <span id="gc4">newOutput</span> = multiplyBy2(10);`,
+  steps:["GEC created — num=3 stored","multiplyBy2 defined in GEC","multiplyBy2(3) called — new local context","result = 3*2 = 6 in local memory","return 6 — local context destroyed","output=6, then newOutput=20"],
+  hl:["gc0","gc1","gc3","gc2","gc2","gc4"],
+  frames:[
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"multiplyBy2(3)",t:"f-hof"}],
+    [{l:"global()",t:"f-global"},{l:"multiplyBy2(3)",t:"f-active"}],
+    [{l:"global()",t:"f-global"},{l:"multiplyBy2(3)",t:"f-cb"}],
+    [{l:"global()",t:"f-global"}],
+  ],
+  flow:[
+    [{t:"d-input",i:"→",v:"num = 3"},{t:"log-purple",i:"H",v:"GEC: num stored globally"}],
+    [{t:"d-input",i:"→",v:"multiplyBy2 = fn ref"},{t:"log-purple",i:"H",v:"GEC: function stored"}],
+    [{t:"d-input",i:"→",v:"multiplyBy2(3)"},{t:"d-transform",i:"⇒",v:"new local context: inputNumber=3"},{t:"log-green",i:"f",v:"local variable environment created"}],
+    [{t:"d-transform",i:"⇒",v:"result = 3 * 2 = 6"},{t:"log-green",i:"f",v:"computed in local memory"}],
+    [{t:"d-output",i:"←",v:"return 6"},{t:"log-orange",i:">",v:"local context destroyed after return"}],
+    [{t:"d-output",i:"←",v:"output=6, newOutput=20"},{t:"log-purple",i:"H",v:"GEC updated with both results"}],
+  ],
+  mem:[
+    {g:[{k:"num",v:"3",s:"mv-new"}],l:[],c:[]},
+    {g:[{k:"num",v:"3"},{k:"multiplyBy2",v:"fn ref",s:"mv-new"}],l:[],c:[]},
+    {g:[{k:"num",v:"3"},{k:"multiplyBy2",v:"fn ref"}],l:[{k:"inputNumber",v:"3",s:"mv-new"}],c:[]},
+    {g:[{k:"num",v:"3"},{k:"multiplyBy2",v:"fn ref"}],l:[{k:"inputNumber",v:"3"},{k:"result",v:"6",s:"mv-new"}],c:[]},
+    {g:[{k:"num",v:"3"},{k:"multiplyBy2",v:"fn ref"}],l:[{k:"return",v:"6",s:"mv-changed"}],c:[]},
+    {g:[{k:"num",v:"3"},{k:"multiplyBy2",v:"fn ref"},{k:"output",v:"6",s:"mv-new"},{k:"newOutput",v:"20",s:"mv-new"}],l:[],c:[]},
+  ],
+},{
+  name:"Parameters vs arguments",
+  desc:"<em>Parameters</em> are the names in the function definition. <em>Arguments</em> are the actual values passed when calling. They're different words for different moments in time.",
+  code:`<span class="cm">// 'name' and 'greeting' are PARAMETERS</span>
+<span class="kw">function</span> <span id="gc0">greet</span>(name, greeting) {
+  <span class="kw">return</span> greeting + <span class="str">" "</span> + name;
+}
+
+<span class="cm">// "Alice" and "Hello" are ARGUMENTS</span>
+<span id="gc1">greet</span>(<span class="str">"Alice"</span>, <span class="str">"Hello"</span>);
+<span id="gc2">greet</span>(<span class="str">"Bob"</span>,   <span class="str">"Hey"</span>);`,
+  steps:["greet defined — 2 parameters: name, greeting","greet('Alice','Hello') — arguments passed","name='Alice', greeting='Hello' in local context","return 'Hello Alice'","greet('Bob','Hey') — fresh context","return 'Hey Bob'"],
+  hl:["gc0","gc1","gc1","gc1","gc2","gc2"],
+  frames:[
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"greet('Alice','Hello')",t:"f-hof"}],
+    [{l:"global()",t:"f-global"},{l:"greet('Alice','Hello')",t:"f-active"}],
+    [{l:"global()",t:"f-global"},{l:"greet('Alice','Hello')",t:"f-cb"}],
+    [{l:"global()",t:"f-global"},{l:"greet('Bob','Hey')",t:"f-hof"}],
+    [{l:"global()",t:"f-global"},{l:"greet('Bob','Hey')",t:"f-cb"}],
+  ],
+  flow:[
+    [{t:"d-input",i:"→",v:"greet = fn(name, greeting)"},{t:"log-purple",i:"H",v:"parameters defined in fn signature"}],
+    [{t:"d-input",i:"→",v:"arguments: 'Alice', 'Hello'"},{t:"d-transform",i:"⇒",v:"name='Alice'  greeting='Hello'"}],
+    [{t:"log-green",i:"f",v:"arguments copied into local context as parameters"}],
+    [{t:"d-output",i:"←",v:"'Hello Alice'"},{t:"log-orange",i:">",v:"> 'Hello Alice'"}],
+    [{t:"d-input",i:"→",v:"arguments: 'Bob', 'Hey'"},{t:"d-transform",i:"⇒",v:"name='Bob'  greeting='Hey'"}],
+    [{t:"d-output",i:"←",v:"'Hey Bob'"},{t:"log-orange",i:">",v:"> 'Hey Bob'  fresh context each call"}],
+  ],
+  mem:[
+    {g:[{k:"greet",v:"fn ref",s:"mv-new"}],l:[],c:[]},
+    {g:[{k:"greet",v:"fn ref"}],l:[{k:"name",v:"'Alice'",s:"mv-new"},{k:"greeting",v:"'Hello'",s:"mv-new"}],c:[]},
+    {g:[{k:"greet",v:"fn ref"}],l:[{k:"name",v:"'Alice'"},{k:"greeting",v:"'Hello'"}],c:[]},
+    {g:[{k:"greet",v:"fn ref"}],l:[{k:"return",v:"'Hello Alice'",s:"mv-changed"}],c:[]},
+    {g:[{k:"greet",v:"fn ref"}],l:[{k:"name",v:"'Bob'",s:"mv-new"},{k:"greeting",v:"'Hey'",s:"mv-new"}],c:[]},
+    {g:[{k:"greet",v:"fn ref"}],l:[{k:"return",v:"'Hey Bob'",s:"mv-changed"}],c:[]},
+  ],
+}]
+},
+{num:2,title:"The call stack",tag:"LIFO · push · pop · stack overflow",
+concept:"The <strong>call stack</strong> is how JavaScript tracks which function is currently running and where to return when it finishes. It's a Last-In-First-Out (LIFO) structure: the most recently called function is always on top. When a function is called, a new frame is <em>pushed</em> onto the stack. When it returns, that frame is <em>popped</em> off and execution resumes in the frame below. Only the top frame ever executes — everything else is paused. <strong>Stack overflow</strong> happens when too many frames pile up (infinite recursion) and memory runs out.",
+callout:null,
+refs:[
+  {lbl:"LIFO",cls:"",title:"Last In First Out",sub:"newest frame runs first"},
+  {lbl:"Push",cls:"",title:"Function called",sub:"new frame added on top"},
+  {lbl:"Pop",cls:"",title:"Function returns",sub:"frame removed, resume below"},
+  {lbl:"Overflow",cls:"",title:"Stack overflow",sub:"too many frames"},
+],
+memPanelTitle:"Stack depth",
+legend:[
+  {color:"var(--purple)",label:"Waiting (paused)"},
+  {color:"var(--green)",label:"Returned"},
+  {color:"var(--orange)",label:"Currently running"},
+],
+examples:[{
+  name:"Push and pop — basic call stack",
+  desc:"Watch the call stack build up and collapse. The bottom frame (global) is always there. Each function call pushes a frame; each return pops it.",
+  code:`<span class="kw">function</span> <span id="gc0">one</span>() {
+  <span id="gc1">two()</span>;
+  <span class="kw">return</span> <span class="str">"done"</span>;
+}
+
+<span class="kw">function</span> <span id="gc2">two</span>() {
+  <span id="gc3">three()</span>;
+  <span class="kw">return</span> <span class="str">"two done"</span>;
+}
+
+<span class="kw">function</span> <span id="gc4">three</span>() {
+  <span class="kw">return</span> <span class="str">"three done"</span>;
+}
+
+<span id="gc5">one()</span>;`,
+  steps:["one(), two(), three() defined","one() called — pushed to stack","one() calls two() — pushed on top","two() calls three() — pushed on top","three() returns — popped off","two() returns — popped, one() resumes, returns"],
+  hl:["gc0","gc5","gc1","gc3","gc4","gc2"],
+  frames:[
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"one()",t:"f-active"}],
+    [{l:"global()",t:"f-global"},{l:"one()",t:"f-hof"},{l:"two()",t:"f-active"}],
+    [{l:"global()",t:"f-global"},{l:"one()",t:"f-hof"},{l:"two()",t:"f-hof"},{l:"three()",t:"f-active"}],
+    [{l:"global()",t:"f-global"},{l:"one()",t:"f-hof"},{l:"two()",t:"f-cb"}],
+    [{l:"global()",t:"f-global"}],
+  ],
+  flow:[
+    [{t:"d-input",i:"→",v:"one, two, three defined"},{t:"log-purple",i:"H",v:"all stored in GEC"}],
+    [{t:"d-input",i:"→",v:"one() called"},{t:"d-transform",i:"⇒",v:"[stack: global → one]"}],
+    [{t:"d-input",i:"→",v:"two() called inside one()"},{t:"d-transform",i:"⇒",v:"[stack: global → one → two]"}],
+    [{t:"d-input",i:"→",v:"three() called inside two()"},{t:"d-transform",i:"⇒",v:"[stack: global → one → two → three]  depth=4"}],
+    [{t:"d-output",i:"←",v:"three() returns 'three done'"},{t:"d-transform",i:"⇒",v:"[stack: global → one → two]  three popped"}],
+    [{t:"d-output",i:"←",v:"two() returns, one() returns"},{t:"log-orange",i:">",v:"stack back to just global()"}],
+  ],
+  mem:[
+    {g:[{k:"one",v:"fn ref"},{k:"two",v:"fn ref"},{k:"three",v:"fn ref"}],l:[],c:[]},
+    {g:[],l:[{k:"depth",v:"2 (global+one)",s:"mv-new"}],c:[]},
+    {g:[],l:[{k:"depth",v:"3 (global+one+two)",s:"mv-changed"}],c:[]},
+    {g:[],l:[{k:"depth",v:"4 (global+one+two+three)",s:"mv-changed"}],c:[]},
+    {g:[],l:[{k:"depth",v:"3 — three popped",s:"mv-changed"}],c:[]},
+    {g:[{k:"result",v:"'done'",s:"mv-new"}],l:[{k:"depth",v:"1 — back to global",s:"mv-changed"}],c:[]},
+  ],
+}]
+},
+{num:3,title:"Higher-order functions",tag:"generalised · callbacks · reusable",
+concept:"A <strong>higher-order function (HOF)</strong> is any function that takes another function as an argument, returns a function, or both. This is what makes JS so expressive — instead of writing the same loop logic over and over with different bodies, you extract the repeated structure into a HOF and pass in only what changes. <code>map</code>, <code>filter</code>, and <code>reduce</code> are classic HOFs. The function you pass in is called a <strong>callback</strong> — it gets called by the HOF at the right moment.",
+callout:null,refs:[],
+memPanelTitle:"HOF memory",
+legend:[
+  {color:"var(--purple)",label:"HOF (outer)"},
+  {color:"var(--green)",label:"Callback (inner)"},
+  {color:"var(--orange)",label:"Currently executing"},
+],
+examples:[{
+  name:"map — transform each element",
+  desc:"<code>Array.map()</code> is a HOF that takes a callback and applies it to every element, returning a new array. The loop structure is fixed inside map — you only provide what changes: the transformation.",
+  code:`<span class="kw">const</span> <span id="gc0">nums</span> = [1, 2, 3, 4, 5];
+
+<span class="cm">// HOF: map takes a callback fn</span>
+<span class="kw">const</span> <span id="gc1">doubled</span> = nums.<span id="gc2">map</span>(<span id="gc3">n => n * 2</span>);
+
+<span class="cm">// [2, 4, 6, 8, 10]</span>
+
+<span class="cm">// Same as manually writing:</span>
+<span class="cm">// doubled[0] = nums[0] * 2  → 2</span>
+<span class="cm">// doubled[1] = nums[1] * 2  → 4</span>
+<span class="cm">// doubled[2] = nums[2] * 2  → 6</span>
+<span class="cm">// doubled[3] = nums[3] * 2  → 8</span>
+<span class="cm">// doubled[4] = nums[4] * 2  → 10</span>`,
+  steps:["nums array defined","map() called — HOF takes callback","callback n=>n*2 applied to nums[0]=1","callback applied to nums[1]=2, nums[2]=3","callback applied to nums[3]=4, nums[4]=5","doubled = [2,4,6,8,10] — new array returned"],
+  hl:["gc0","gc2","gc3","gc3","gc3","gc1"],
+  frames:[
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"nums.map(cb)",t:"f-hof"}],
+    [{l:"global()",t:"f-global"},{l:"nums.map(cb)",t:"f-hof"},{l:"cb(1)",t:"f-cb"}],
+    [{l:"global()",t:"f-global"},{l:"nums.map(cb)",t:"f-hof"},{l:"cb(2)..cb(3)",t:"f-active"}],
+    [{l:"global()",t:"f-global"},{l:"nums.map(cb)",t:"f-hof"},{l:"cb(4)..cb(5)",t:"f-active"}],
+    [{l:"global()",t:"f-global"}],
+  ],
+  flow:[
+    [{t:"d-input",i:"→",v:"nums = [1,2,3,4,5]"}],
+    [{t:"d-input",i:"→",v:"map(n => n*2)"},{t:"log-purple",i:"H",v:"HOF: map handles the loop"}],
+    [{t:"d-transform",i:"⇒",v:"cb(1) = 1*2 = 2"},{t:"log-green",i:"f",v:"callback runs per element"}],
+    [{t:"d-transform",i:"⇒",v:"cb(2)=4  cb(3)=6"}],
+    [{t:"d-transform",i:"⇒",v:"cb(4)=8  cb(5)=10"}],
+    [{t:"d-output",i:"←",v:"doubled = [2,4,6,8,10]"},{t:"log-orange",i:">",v:"new array — original untouched"}],
+  ],
+  mem:[
+    {g:[{k:"nums",v:"[1,2,3,4,5]",s:"mv-new"}],l:[],c:[]},
+    {g:[{k:"nums",v:"[1,2,3,4,5]"},{k:"doubled",v:"(running...)"}],l:[{k:"cb",v:"n=>n*2"}],c:[]},
+    {g:[],l:[{k:"n",v:"1"},{k:"return",v:"2",s:"mv-new"}],c:[]},
+    {g:[],l:[{k:"n",v:"2,3"},{k:"return",v:"4,6",s:"mv-changed"}],c:[]},
+    {g:[],l:[{k:"n",v:"4,5"},{k:"return",v:"8,10",s:"mv-changed"}],c:[]},
+    {g:[{k:"nums",v:"[1,2,3,4,5]"},{k:"doubled",v:"[2,4,6,8,10]",s:"mv-new"}],l:[],c:[]},
+  ],
+}]
+},
+{num:4,title:"Functions as first-class objects",tag:"assign · pass · return · store",
+concept:"In JavaScript, functions are <strong>first-class objects</strong> — they can be stored in variables, passed as arguments, returned from other functions, and given properties. This is the foundation of everything: callbacks, HOFs, closures, decorators. A function is both callable (<code>fn()</code>) and an object with properties (<code>fn.name</code>, <code>fn.length</code>, <code>fn.prototype</code>). This duality is what makes all the functional patterns in JS possible.",
+callout:null,refs:[],
+memPanelTitle:"Function as object",
+legend:[{color:"var(--purple)",label:"Function stored"},{color:"var(--green)",label:"Function called"},{color:"var(--orange)",label:"Return value"}],
+examples:[{
+  name:"Assign, pass, return",
+  desc:"Three ways to treat functions as values: assign them to variables, pass them as arguments, and return them from other functions.",
+  code:`<span class="cm">// 1. Assign to a variable</span>
+<span class="kw">const</span> <span id="gc0">sayHi</span> = <span class="kw">function</span>(name) {
+  <span class="kw">return</span> <span class="str">"Hi "</span> + name;
+};
+
+<span class="cm">// 2. Pass as argument (callback)</span>
+<span class="kw">function</span> <span id="gc1">runWith</span>(fn, val) {
+  <span class="kw">return</span> fn(val);
+}
+<span id="gc2">runWith</span>(sayHi, <span class="str">"Alice"</span>); <span class="cm">// "Hi Alice"</span>
+
+<span class="cm">// 3. Return from a function (factory)</span>
+<span class="kw">function</span> <span id="gc3">makeGreeter</span>(greeting) {
+  <span class="kw">return</span> <span id="gc4"><span class="kw">function</span>(name) {
+    <span class="kw">return</span> greeting + <span class="str">" "</span> + name;
+  }</span>;
+}
+<span class="kw">const</span> <span id="gc5">hello</span> = makeGreeter(<span class="str">"Hello"</span>);
+hello(<span class="str">"Bob"</span>); <span class="cm">// "Hello Bob"</span>`,
+  steps:["sayHi assigned to variable — stored as value","runWith takes fn as parameter","runWith(sayHi,'Alice') — passes fn as argument","fn(val) = sayHi('Alice') = 'Hi Alice'","makeGreeter returns a function","hello = makeGreeter('Hello') — function stored"],
+  hl:["gc0","gc1","gc2","gc2","gc3","gc5"],
+  frames:[
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"runWith(sayHi,'Alice')",t:"f-hof"}],
+    [{l:"global()",t:"f-global"},{l:"runWith()",t:"f-hof"},{l:"sayHi('Alice')",t:"f-cb"}],
+    [{l:"global()",t:"f-global"},{l:"makeGreeter('Hello')",t:"f-hof"}],
+    [{l:"global()",t:"f-global"}],
+  ],
+  flow:[
+    [{t:"d-input",i:"→",v:"sayHi = function(name){...}"},{t:"log-purple",i:"H",v:"function stored as value in variable"}],
+    [{t:"d-input",i:"→",v:"runWith = function(fn,val){...}"},{t:"log-purple",i:"H",v:"fn parameter accepts any function"}],
+    [{t:"d-input",i:"→",v:"runWith(sayHi,'Alice')"},{t:"d-transform",i:"⇒",v:"fn=sayHi  val='Alice'"}],
+    [{t:"d-transform",i:"⇒",v:"fn('Alice') = sayHi('Alice')"},{t:"d-output",i:"←",v:"> 'Hi Alice'"}],
+    [{t:"d-input",i:"→",v:"makeGreeter('Hello') returns a function"},{t:"log-orange",i:">",v:"function is the return value"}],
+    [{t:"d-output",i:"←",v:"hello = fn that prepends 'Hello '"},{t:"log-purple",i:"H",v:"hello('Bob') → 'Hello Bob'"}],
+  ],
+  mem:[
+    {g:[{k:"sayHi",v:"fn ref",s:"mv-new"}],l:[],c:[]},
+    {g:[{k:"sayHi",v:"fn ref"},{k:"runWith",v:"fn ref",s:"mv-new"}],l:[],c:[]},
+    {g:[{k:"sayHi",v:"fn ref"},{k:"runWith",v:"fn ref"}],l:[{k:"fn",v:"sayHi ref",s:"mv-new"},{k:"val",v:"'Alice'",s:"mv-new"}],c:[]},
+    {g:[],l:[{k:"return",v:"'Hi Alice'",s:"mv-new"}],c:[]},
+    {g:[{k:"makeGreeter",v:"fn ref"}],l:[{k:"greeting",v:"'Hello'",s:"mv-new"},{k:"return",v:"fn ref",s:"mv-new"}],c:[]},
+    {g:[{k:"makeGreeter",v:"fn ref"},{k:"hello",v:"fn ref (greeter)",s:"mv-new"}],l:[],c:[]},
+  ],
+}]
+},
+{num:5,title:"Arrow functions",tag:"syntax · lexical this · concise",
+concept:"Arrow functions are a concise syntax for writing functions: <code>(x) => x * 2</code> instead of <code>function(x){ return x * 2; }</code>. They have a key difference from regular functions: they have <strong>no own <code>this</code></strong> — they inherit <code>this</code> from the surrounding lexical scope. This makes them ideal for callbacks inside methods, where you want <code>this</code> to refer to the enclosing object. They also have implicit returns when written without curly braces.",
+callout:null,refs:[],
+memPanelTitle:"Arrow function forms",
+legend:[{color:"var(--purple)",label:"Arrow fn"},{color:"var(--green)",label:"Regular fn"},{color:"var(--orange)",label:"this binding"}],
+examples:[{
+  name:"Syntax forms — concise to verbose",
+  desc:"Arrow functions have several syntax forms depending on how many parameters and whether the body needs multiple statements.",
+  code:`<span class="cm">// No params</span>
+<span class="kw">const</span> <span id="gc0">greet</span> = () => <span class="str">"Hello!"</span>;
+
+<span class="cm">// One param (parens optional)</span>
+<span class="kw">const</span> <span id="gc1">double</span> = x => x * 2;
+
+<span class="cm">// Multiple params</span>
+<span class="kw">const</span> <span id="gc2">add</span> = (a, b) => a + b;
+
+<span class="cm">// Body with multiple statements</span>
+<span class="kw">const</span> <span id="gc3">process</span> = (x) => {
+  <span class="kw">const</span> result = x * 10;
+  <span class="kw">return</span> result + 1;
+};
+
+<span id="gc4">double</span>(5);   <span class="cm">// 10</span>
+<span id="gc5">add</span>(3, 4);   <span class="cm">// 7</span>`,
+  steps:["No params: ()=>value — implicit return","One param: x=>x*2 — implicit return","Two params: (a,b)=>a+b","Block body: needs explicit return","double(5) = 10","add(3,4) = 7"],
+  hl:["gc0","gc1","gc2","gc3","gc4","gc5"],
+  frames:[
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"double(5)",t:"f-cb"}],
+    [{l:"global()",t:"f-global"},{l:"add(3,4)",t:"f-cb"}],
+  ],
+  flow:[
+    [{t:"d-input",i:"→",v:"greet = () => 'Hello!'"},{t:"log-purple",i:"H",v:"no params, implicit return"}],
+    [{t:"d-input",i:"→",v:"double = x => x*2"},{t:"log-purple",i:"H",v:"one param, implicit return"}],
+    [{t:"d-input",i:"→",v:"add = (a,b) => a+b"},{t:"log-purple",i:"H",v:"multiple params need parens"}],
+    [{t:"d-input",i:"→",v:"process = (x) => { ... }"},{t:"log-purple",i:"H",v:"block body needs explicit return"}],
+    [{t:"d-transform",i:"⇒",v:"5*2 = 10"},{t:"d-output",i:"←",v:"> 10"}],
+    [{t:"d-transform",i:"⇒",v:"3+4 = 7"},{t:"d-output",i:"←",v:"> 7"}],
+  ],
+  mem:[
+    {g:[{k:"greet",v:"()=>'Hello!'",s:"mv-new"}],l:[],c:[]},
+    {g:[{k:"greet",v:"fn"},{k:"double",v:"x=>x*2",s:"mv-new"}],l:[],c:[]},
+    {g:[{k:"greet",v:"fn"},{k:"double",v:"fn"},{k:"add",v:"(a,b)=>a+b",s:"mv-new"}],l:[],c:[]},
+    {g:[{k:"greet",v:"fn"},{k:"double",v:"fn"},{k:"add",v:"fn"},{k:"process",v:"fn",s:"mv-new"}],l:[],c:[]},
+    {g:[],l:[{k:"x",v:"5"},{k:"return",v:"10",s:"mv-new"}],c:[]},
+    {g:[],l:[{k:"a",v:"3"},{k:"b",v:"4"},{k:"return",v:"7",s:"mv-new"}],c:[]},
+  ],
+}]
+},
+{num:6,title:"State",tag:"live data · local vs global · persistence",
+concept:"<strong>State</strong> is data that changes over time — the live values your program tracks as it runs. Local state (variables inside a function) dies when the function returns. Global state persists but is fragile — any code can change it, making bugs hard to trace. The tension between 'I need this to persist' and 'I need this to be safe' is exactly what closures solve. Understanding state helps you understand <em>why</em> closures exist.",
+callout:null,refs:[],
+memPanelTitle:"State tracking",
+legend:[{color:"var(--purple)",label:"Local state (dies)"},{color:"var(--green)",label:"Global state (persists)"},{color:"var(--orange)",label:"State mutation"}],
+examples:[{
+  name:"Local vs global state",
+  desc:"Local variables are born when a function runs and die when it returns. Global variables persist across calls — but anything can change them.",
+  code:`<span class="cm">// Global state — persists, but fragile</span>
+<span class="kw">let</span> <span id="gc0">globalCount</span> = 0;
+
+<span class="kw">function</span> <span id="gc1">incrementGlobal</span>() {
+  globalCount++;
+  <span class="kw">return</span> globalCount;
+}
+
+<span class="cm">// Local state — safe, but dies each call</span>
+<span class="kw">function</span> <span id="gc2">incrementLocal</span>() {
+  <span class="kw">let</span> <span id="gc3">count</span> = 0; <span class="cm">// resets every call</span>
+  count++;
+  <span class="kw">return</span> count;   <span class="cm">// always returns 1</span>
+}
+
+<span id="gc4">incrementGlobal()</span>; <span class="cm">// 1</span>
+<span id="gc5">incrementGlobal()</span>; <span class="cm">// 2</span>
+incrementLocal();    <span class="cm">// 1 (always 1)</span>`,
+  steps:["globalCount=0 in global memory","incrementGlobal — reads and mutates global","incrementLocal — count resets each call","1st call: globalCount 0→1","2nd call: globalCount 1→2","incrementLocal always returns 1 — local dies"],
+  hl:["gc0","gc1","gc3","gc4","gc5","gc2"],
+  frames:[
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"incrementGlobal()",t:"f-active"}],
+    [{l:"global()",t:"f-global"},{l:"incrementGlobal()",t:"f-active"}],
+    [{l:"global()",t:"f-global"},{l:"incrementLocal()",t:"f-cb"}],
+  ],
+  flow:[
+    [{t:"d-input",i:"→",v:"globalCount = 0"},{t:"log-green",i:"H",v:"GLOBAL: lives forever until changed"}],
+    [{t:"d-input",i:"→",v:"incrementGlobal reads globalCount"},{t:"log-purple",i:"H",v:"any code can change global state — fragile"}],
+    [{t:"d-input",i:"→",v:"incrementLocal: count=0 every call"},{t:"log-purple",i:"H",v:"local state — born and dies each call"}],
+    [{t:"d-transform",i:"⇒",v:"globalCount: 0→1"},{t:"d-output",i:"←",v:"> 1"}],
+    [{t:"d-transform",i:"⇒",v:"globalCount: 1→2"},{t:"d-output",i:"←",v:"> 2"}],
+    [{t:"d-transform",i:"⇒",v:"count: 0→1 (local, dies)"},{t:"d-output",i:"←",v:"> 1 (always 1 — state lost)"}],
+  ],
+  mem:[
+    {g:[{k:"globalCount",v:"0",s:"mv-new"}],l:[],c:[]},
+    {g:[{k:"globalCount",v:"0"}],l:[],c:[]},
+    {g:[{k:"globalCount",v:"0"}],l:[{k:"count",v:"0 (local)",s:"mv-new"}],c:[]},
+    {g:[{k:"globalCount",v:"1",s:"mv-changed"}],l:[],c:[]},
+    {g:[{k:"globalCount",v:"2",s:"mv-changed"}],l:[],c:[]},
+    {g:[{k:"globalCount",v:"2"}],l:[{k:"count",v:"1 then gone",s:"mv-special"}],c:[]},
+  ],
+}]
+},
+{num:7,title:"Closures",tag:"backpack · persistent scope · COVE",
+concept:"A <strong>closure</strong> is a function that <em>remembers</em> the variables from its birth environment even after that environment has finished executing. When an inner function is defined inside an outer function, it gets a hidden 'backpack' attached to it — a reference to all the variables in its surrounding scope at the moment it was created. This backpack travels with the function wherever it goes. The technical term: a function object plus its surrounding variable environment. Closures are the mechanism behind stateful functions, the module pattern, memoization, and much more.",
+callout:{type:"callout-purple",text:"Every function in JavaScript is a closure — it always remembers the scope in which it was created. Most of the time this doesn't matter because the scope is the global one. It matters when a function is defined inside another function and returned."},
+refs:[],
+memPanelTitle:"Closure / backpack",
+legend:[{color:"var(--purple)",label:"Outer function"},{color:"var(--green)",label:"Inner function"},{color:"var(--orange)",label:"Closed-over variable"}],
+examples:[{
+  name:"The counter — classic closure",
+  desc:"The inner function closes over <code>count</code> from the outer function's scope. When the outer function returns, <code>count</code> should die — but the inner function's backpack keeps it alive.",
+  code:`<span class="kw">function</span> <span id="gc0">makeCounter</span>() {
+  <span class="kw">let</span> <span id="gc1">count</span> = 0; <span class="cm">// lives in backpack</span>
+
+  <span class="kw">return</span> <span id="gc2"><span class="kw">function</span>() {
+    count++;
+    <span class="kw">return</span> count;
+  }</span>;
+}
+
+<span class="kw">const</span> <span id="gc3">counter</span> = makeCounter();
+<span class="cm">// makeCounter's context is gone —</span>
+<span class="cm">// but count lives on in counter's backpack</span>
+
+<span id="gc4">counter()</span>; <span class="cm">// 1</span>
+<span id="gc5">counter()</span>; <span class="cm">// 2</span>
+counter();  <span class="cm">// 3</span>`,
+  steps:["makeCounter defined","makeCounter() called — count=0 created","inner function returned with backpack {count:0}","makeCounter's context gone — but backpack persists","counter() — reads count from backpack, 0→1","counter() again — backpack count: 1→2"],
+  hl:["gc0","gc1","gc2","gc3","gc4","gc5"],
+  frames:[
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"makeCounter()",t:"f-hof"}],
+    [{l:"global()",t:"f-global"},{l:"makeCounter()",t:"f-hof"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"counter()",t:"f-cb"}],
+    [{l:"global()",t:"f-global"},{l:"counter()",t:"f-cb"}],
+  ],
+  flow:[
+    [{t:"d-input",i:"→",v:"makeCounter defined"}],
+    [{t:"d-input",i:"→",v:"makeCounter() called"},{t:"d-transform",i:"⇒",v:"count=0 created in local scope"}],
+    [{t:"d-transform",i:"⇒",v:"inner fn returned — backpack: {count:0}"},{t:"log-purple",i:"H",v:"inner fn closes over count"}],
+    [{t:"d-special",i:"!",v:"makeCounter context destroyed — count should die"},{t:"log-orange",i:">",v:"BUT: counter's backpack keeps count alive"}],
+    [{t:"d-transform",i:"⇒",v:"backpack.count: 0→1"},{t:"d-output",i:"←",v:"> 1"}],
+    [{t:"d-transform",i:"⇒",v:"backpack.count: 1→2"},{t:"d-output",i:"←",v:"> 2"}],
+  ],
+  mem:[
+    {g:[{k:"makeCounter",v:"fn ref"}],l:[],c:[]},
+    {g:[{k:"makeCounter",v:"fn ref"}],l:[{k:"count",v:"0",s:"mv-new"}],c:[]},
+    {g:[{k:"makeCounter",v:"fn ref"},{k:"counter",v:"fn+backpack",s:"mv-new"}],l:[],c:[{k:"count",v:"0",s:"mv-new"}]},
+    {g:[{k:"makeCounter",v:"fn ref"},{k:"counter",v:"fn+backpack"}],l:[],c:[{k:"count",v:"0"}]},
+    {g:[{k:"makeCounter",v:"fn ref"},{k:"counter",v:"fn+backpack"}],l:[],c:[{k:"count",v:"1",s:"mv-changed"}]},
+    {g:[{k:"makeCounter",v:"fn ref"},{k:"counter",v:"fn+backpack"}],l:[],c:[{k:"count",v:"2",s:"mv-changed"}]},
+  ],
+}]
+},
+{num:8,title:"Memoization",tag:"cache · performance · closures applied",
+concept:"<strong>Memoization</strong> is an optimisation technique: cache the results of expensive function calls so that if the same input is seen again, the cached result is returned immediately without recomputing. It's a direct application of closures — the cache lives in the closure's backpack, persisting between calls but hidden from the outside world. Pure functions (same input always → same output, no side effects) are ideal candidates for memoization.",
+callout:null,refs:[],
+memPanelTitle:"Cache (closure)",
+legend:[{color:"var(--purple)",label:"Cache miss — compute"},{color:"var(--green)",label:"Cache hit — return"},{color:"var(--orange)",label:"Slow function"}],
+examples:[{
+  name:"Memoize — manual pattern",
+  desc:"Wrap an expensive function in a closure that maintains a cache object. First call with a given input: compute and store. Subsequent calls: return cached value instantly.",
+  code:`<span class="kw">function</span> <span id="gc0">memoize</span>(fn) {
+  <span class="kw">const</span> <span id="gc1">cache</span> = {}; <span class="cm">// lives in backpack</span>
+
+  <span class="kw">return</span> <span kw="kw">function</span>(<span id="gc2">n</span>) {
+    <span class="kw">if</span> (cache[n] !== undefined) {
+      <span class="kw">return</span> cache[n]; <span class="cm">// ⚡ cached</span>
+    }
+    <span id="gc3">cache[n]</span> = fn(n); <span class="cm">// compute & store</span>
+    <span class="kw">return</span> cache[n];
+  };
+}
+
+<span class="kw">const</span> <span id="gc4">slowDouble</span> = n => n * 2;
+<span class="kw">const</span> <span id="gc5">fastDouble</span> = memoize(slowDouble);
+
+fastDouble(5);  <span class="cm">// MISS → computes → cache: {5:10}</span>
+fastDouble(5);  <span class="cm">// HIT  → returns 10 instantly ⚡</span>`,
+  steps:["memoize defined — takes fn, returns cached version","cache={} in backpack — persists between calls","fastDouble = memoize(slowDouble)","fastDouble(5) — cache miss: compute 5*2=10","cache: {5:10} stored","fastDouble(5) again — HIT: return 10 instantly ⚡"],
+  hl:["gc0","gc1","gc4","gc2","gc3","gc5"],
+  frames:[
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"memoize(slowDouble)",t:"f-hof"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"fastDouble(5)",t:"f-hof"},{l:"slowDouble(5)",t:"f-cb"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"fastDouble(5)",t:"f-active"}],
+  ],
+  flow:[
+    [{t:"d-input",i:"→",v:"memoize(fn) — wraps any fn"},{t:"log-purple",i:"H",v:"returns new fn with cache backpack"}],
+    [{t:"d-transform",i:"⇒",v:"cache = {} stored in closure"},{t:"log-purple",i:"H",v:"backpack: cache persists between calls"}],
+    [{t:"d-output",i:"←",v:"fastDouble = cached version of slowDouble"}],
+    [{t:"d-input",i:"→",v:"fastDouble(5)"},{t:"d-special",i:"!",v:"MISS: cache[5] = undefined → compute"},{t:"d-transform",i:"⇒",v:"slowDouble(5) = 10"}],
+    [{t:"d-transform",i:"⇒",v:"cache[5] = 10 stored"},{t:"d-output",i:"←",v:"> 10 (computed)"}],
+    [{t:"d-input",i:"→",v:"fastDouble(5) again"},{t:"d-transform",i:"⇒",v:"HIT: cache[5] = 10"},{t:"d-output",i:"←",v:"> 10 ⚡ instantly — fn never called"}],
+  ],
+  mem:[
+    {g:[{k:"memoize",v:"fn ref"}],l:[],c:[]},
+    {g:[{k:"memoize",v:"fn ref"},{k:"fastDouble",v:"fn+backpack",s:"mv-new"}],l:[],c:[{k:"cache",v:"{}",s:"mv-new"}]},
+    {g:[{k:"fastDouble",v:"fn+backpack"}],l:[],c:[{k:"cache",v:"{}"}]},
+    {g:[{k:"fastDouble",v:"fn+backpack"}],l:[{k:"n",v:"5"},{k:"MISS",v:"cache[5]=undefined",s:"mv-special"}],c:[{k:"cache",v:"{}"}]},
+    {g:[{k:"fastDouble",v:"fn+backpack"}],l:[],c:[{k:"cache",v:"{5:10}",s:"mv-new"}]},
+    {g:[{k:"fastDouble",v:"fn+backpack"}],l:[{k:"n",v:"5"},{k:"HIT",v:"cache[5]=10 ⚡",s:"mv-changed"}],c:[{k:"cache",v:"{5:10}"}]},
+  ],
+}]
+},
+{num:9,title:"Memoization — advanced",tag:"multi-arg · serialize key · fibonacci",
+concept:"Basic memoization uses the argument as the cache key directly — which breaks with multiple arguments or object arguments. The fix: <strong>serialize the arguments</strong> into a string key (<code>JSON.stringify(args)</code>). This works for any pure function regardless of how many arguments it takes. The most impressive use case: memoizing recursive functions like Fibonacci — transforming O(2ⁿ) exponential time into O(n) linear by caching each subproblem.",
+callout:null,refs:[],
+memPanelTitle:"Cache (serialized keys)",
+legend:[{color:"var(--purple)",label:"Cache miss"},{color:"var(--green)",label:"Cache hit ⚡"},{color:"var(--orange)",label:"Recursive call"}],
+examples:[{
+  name:"Fibonacci — O(2ⁿ) vs O(n)",
+  desc:"Without memoization, <code>fib(40)</code> makes ~330 million calls. With memoization, it makes ~40. The same function, the same results — just with a cache in the closure backpack.",
+  code:`<span class="kw">function</span> <span id="gc0">memoize</span>(fn) {
+  <span class="kw">const</span> cache = {};
+  <span class="kw">return</span> (...args) => {
+    <span class="kw">const</span> key = JSON.stringify(args);
+    <span class="kw">if</span> (cache[key]) <span class="kw">return</span> cache[key];
+    <span class="kw">return</span> cache[key] = fn(...args);
+  };
+}
+
+<span class="cm">// Wrap fib with itself</span>
+<span class="kw">let</span> <span id="gc1">fib</span> = <span class="kw">function</span>(n) {
+  <span class="kw">if</span> (n <= 1) <span class="kw">return</span> n;
+  <span class="kw">return</span> <span id="gc2">fib(n-1) + fib(n-2)</span>;
+};
+
+fib = <span id="gc3">memoize(fib)</span>;
+
+<span id="gc4">fib(10)</span>; <span class="cm">// 55  — only 11 calls (not 177)</span>
+<span id="gc5">fib(10)</span>; <span class="cm">// 55  — 1 call (full cache hit) ⚡</span>`,
+  steps:["memoize with serialized key — works for any fn","fib defined — recursive O(2ⁿ) without cache","fib = memoize(fib) — wraps itself","fib(10): 11 unique subproblems, each computed once","fib(9),fib(8)... all cached — no recompute","fib(10) again — full cache hit, 1 call ⚡"],
+  hl:["gc0","gc1","gc2","gc3","gc4","gc5"],
+  frames:[
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"memoize(fib)",t:"f-hof"}],
+    [{l:"global()",t:"f-global"},{l:"fib(10)",t:"f-hof"},{l:"fib(9)",t:"f-cb"}],
+    [{l:"global()",t:"f-global"},{l:"fib(10)",t:"f-hof"},{l:"fib(8) HIT⚡",t:"f-active"}],
+    [{l:"global()",t:"f-global"},{l:"fib(10) HIT⚡",t:"f-active"}],
+  ],
+  flow:[
+    [{t:"d-input",i:"→",v:"memoize: key=JSON.stringify(args)"},{t:"log-purple",i:"H",v:"multi-arg safe: any fn, any arity"}],
+    [{t:"d-input",i:"→",v:"fib(n) = fib(n-1)+fib(n-2)"},{t:"d-special",i:"!",v:"without memoize: fib(10) = 177 calls"}],
+    [{t:"d-transform",i:"⇒",v:"fib = memoize(fib)"},{t:"log-purple",i:"H",v:"backpack cache: will fill on first pass"}],
+    [{t:"d-input",i:"→",v:"fib(10) first call"},{t:"d-transform",i:"⇒",v:"fib(9)→MISS, fib(8)→MISS...fib(0)→base"}],
+    [{t:"d-transform",i:"⇒",v:"fib(2)→MISS once, fib(3)→MISS once..."},{t:"d-output",i:"←",v:"55 — only 11 unique calls total"}],
+    [{t:"d-input",i:"→",v:"fib(10) second call"},{t:"d-output",i:"←",v:"55 ⚡ — 1 call, full cache hit"}],
+  ],
+  mem:[
+    {g:[{k:"memoize",v:"fn ref"}],l:[],c:[]},
+    {g:[{k:"memoize",v:"fn ref"},{k:"fib",v:"fn (no cache yet)"}],l:[],c:[]},
+    {g:[{k:"fib",v:"fn+backpack",s:"mv-new"}],l:[],c:[{k:"cache",v:"{}"}]},
+    {g:[{k:"fib",v:"fn+backpack"}],l:[],c:[{k:"cache",v:"{0:0,1:1,2:1...}",s:"mv-new"}]},
+    {g:[{k:"fib",v:"fn+backpack"}],l:[],c:[{k:"cache",v:"{0→10: all cached}",s:"mv-changed"}]},
+    {g:[{k:"fib",v:"fn+backpack"}],l:[{k:"fib(10)",v:"HIT ⚡",s:"mv-changed"}],c:[{k:"cache",v:"{...,10:55}"}]},
+  ],
+}]
+},
+{num:10,title:"Decorator pattern",tag:"wrap · extend · compose · withLogging",
+concept:"The <strong>decorator pattern</strong> wraps a function to add new behaviour without modifying the original. The decorator takes a function, returns a new function that calls the original plus does something extra — logging, timing, caching, validation. Decorators are composable: you can stack them. <code>withLogging(withTiming(memoize(fn)))</code> — three independent behaviours, zero changes to the original function. This is the power of functions-as-values: behaviour is just data you can wrap.",
+callout:null,refs:[],
+memPanelTitle:"Decorator chain",
+legend:[{color:"var(--purple)",label:"Decorator (wrapper)"},{color:"var(--green)",label:"Original function"},{color:"var(--orange)",label:"Added behaviour"}],
+examples:[{
+  name:"withLogging + withTiming — stacked",
+  desc:"Each decorator adds one concern. Stack them: the outermost runs first, calls the next, which calls the original. Separation of concerns — each piece does one thing.",
+  code:`<span class="kw">function</span> <span id="gc0">withLogging</span>(fn) {
+  <span class="kw">return</span> (...args) => {
+    console.log(<span class="str">\`Calling with \${args}\`</span>);
+    <span class="kw">const</span> result = fn(...args);
+    console.log(<span class="str">\`Returned: \${result}\`</span>);
+    <span class="kw">return</span> result;
+  };
+}
+
+<span class="kw">function</span> <span id="gc1">withTiming</span>(fn) {
+  <span class="kw">return</span> (...args) => {
+    <span class="kw">const</span> start = Date.now();
+    <span class="kw">const</span> result = fn(...args);
+    console.log(<span class="str">\`Time: \${Date.now()-start}ms\`</span>);
+    <span class="kw">return</span> result;
+  };
+}
+
+<span class="kw">const</span> add = (a, b) => a + b;
+<span class="kw">const</span> <span id="gc2">enhanced</span> = withLogging(<span id="gc3">withTiming</span>(add));
+<span id="gc4">enhanced(3, 4)</span>;`,
+  steps:["withLogging decorator defined","withTiming decorator defined","enhanced = withLogging(withTiming(add))","enhanced(3,4) — withLogging fires first","withLogging calls withTiming(add)(3,4)","withTiming calls add(3,4) = 7, logs time"],
+  hl:["gc0","gc1","gc2","gc3","gc4","gc4"],
+  frames:[
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"withLogging wrapper",t:"f-hof"}],
+    [{l:"global()",t:"f-global"},{l:"withLogging wrapper",t:"f-hof"},{l:"withTiming wrapper",t:"f-cb"}],
+    [{l:"global()",t:"f-global"},{l:"withLogging",t:"f-hof"},{l:"withTiming",t:"f-cb"},{l:"add(3,4)",t:"f-active"}],
+  ],
+  flow:[
+    [{t:"d-input",i:"→",v:"withLogging(fn) — logs args and result"}],
+    [{t:"d-input",i:"→",v:"withTiming(fn) — measures execution time"}],
+    [{t:"d-transform",i:"⇒",v:"enhanced = withLogging(withTiming(add))"},{t:"log-purple",i:"H",v:"3 layers stacked — each does one thing"}],
+    [{t:"log-orange",i:">",v:'> "Calling with 3,4"'},{t:"log-purple",i:"H",v:"withLogging fires — logs before calling"}],
+    [{t:"d-transform",i:"⇒",v:"withTiming starts timer → calls add"},{t:"log-orange",i:">",v:'> "Time: 0ms"'}],
+    [{t:"d-transform",i:"⇒",v:"add(3,4)=7 — original untouched"},{t:"log-orange",i:">",v:'> "Returned: 7"'},{t:"d-output",i:"←",v:"> 7"}],
+  ],
+  mem:[
+    {g:[{k:"withLogging",v:"fn ref"}],l:[],c:[]},
+    {g:[{k:"withLogging",v:"fn ref"},{k:"withTiming",v:"fn ref"}],l:[],c:[]},
+    {g:[{k:"add",v:"(a,b)=>a+b"},{k:"enhanced",v:"fn (3 layers)",s:"mv-new"}],l:[],c:[{k:"layer1",v:"withLogging"},{k:"layer2",v:"withTiming"},{k:"core",v:"add"}]},
+    {g:[{k:"enhanced",v:"fn (3 layers)"}],l:[{k:"args",v:"[3,4]",s:"mv-new"}],c:[]},
+    {g:[{k:"enhanced",v:"fn (3 layers)"}],l:[{k:"start",v:"Date.now()",s:"mv-new"}],c:[]},
+    {g:[{k:"enhanced",v:"fn (3 layers)"}],l:[{k:"result",v:"7",s:"mv-changed"}],c:[]},
+  ],
+}]
+},
+{num:11,title:"Closure instances",tag:"separate backpacks · isolation · React analogy",
+concept:"Every time you call a function that returns a closure, a brand new closure instance is created with its own isolated backpack. <code>func1 = ogFunc()</code> and <code>func2 = ogFunc()</code> each get separate backpacks — mutating one has zero effect on the other. This is the mechanism behind React's <code>useState</code> (each component instance gets its own state), the module pattern, and factory functions. The key insight: it's not the function definition that creates the backpack — it's each individual <em>call</em>.",
+callout:{type:"callout-purple",text:"Your note: 'Multiple closure instances possible if initiated as 2 different func variables — func1 = ogFunc(), func2 = ogFunc() — Separate Backpacks'"},
+refs:[],
+memPanelTitle:"Separate backpacks",
+legend:[{color:"var(--purple)",label:"Backpack A"},{color:"var(--green)",label:"Backpack B"},{color:"var(--orange)",label:"Mutation"}],
+examples:[{
+  name:"Two calls, two backpacks",
+  desc:"Calling the same factory twice creates two completely separate closures. Incrementing one counter has zero effect on the other.",
+  code:`<span class="kw">function</span> <span id="gc0">makeCounter</span>() {
+  <span class="kw">let</span> <span id="gc1">count</span> = 0;
+  <span class="kw">return</span> () => ++count;
+}
+
+<span class="cm">// Two calls = two separate backpacks</span>
+<span class="kw">const</span> <span id="gc2">func1</span> = <span id="gc3">makeCounter()</span>; <span class="cm">// backpack A</span>
+<span class="kw">const</span> <span id="gc4">func2</span> = <span id="gc5">makeCounter()</span>; <span class="cm">// backpack B</span>
+
+func1(); func1(); func1(); <span class="cm">// A.count = 3</span>
+<span id="gc6">func2()</span>; <span class="cm">// B.count = 1 (not 4!)</span>`,
+  steps:["makeCounter factory defined","func1 = makeCounter() — backpack A: count=0","func2 = makeCounter() — backpack B: count=0","func1() ×3 — backpack A: count=3","func2() — backpack B: count=1","Backpacks completely isolated"],
+  hl:["gc0","gc3","gc5","gc2","gc4","gc6"],
+  frames:[
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"makeCounter() → func1",t:"f-hof"}],
+    [{l:"global()",t:"f-global"},{l:"makeCounter() → func2",t:"f-hof"}],
+    [{l:"global()",t:"f-global"},{l:"func1() ×3",t:"f-active"}],
+    [{l:"global()",t:"f-global"},{l:"func2()",t:"f-active"}],
+    [{l:"global()",t:"f-global"}],
+  ],
+  flow:[
+    [{t:"d-input",i:"→",v:"makeCounter = factory fn"}],
+    [{t:"d-input",i:"→",v:"func1 = makeCounter()"},{t:"d-transform",i:"⇒",v:"backpack A: {count:0}"},{t:"log-purple",i:"H",v:"separate backpack created"}],
+    [{t:"d-input",i:"→",v:"func2 = makeCounter()"},{t:"d-transform",i:"⇒",v:"backpack B: {count:0}"},{t:"log-green",i:"f",v:"entirely separate backpack"}],
+    [{t:"d-input",i:"→",v:"func1() ×3"},{t:"d-transform",i:"⇒",v:"A.count: 0→1→2→3"},{t:"log-green",i:"f",v:"B.count untouched"}],
+    [{t:"d-input",i:"→",v:"func2()"},{t:"d-transform",i:"⇒",v:"B.count: 0→1"},{t:"log-orange",i:">",v:"> 1 (not 4 — independent)"}],
+    [{t:"d-output",i:"←",v:"func1.count=3  func2.count=1"},{t:"log-purple",i:"H",v:"same factory, two isolated instances"}],
+  ],
+  mem:[
+    {g:[{k:"makeCounter",v:"fn ref"}],l:[],c:[]},
+    {g:[{k:"func1",v:"fn+backpackA",s:"mv-new"}],l:[],c:[{k:"A.count",v:"0",s:"mv-new"}]},
+    {g:[{k:"func1",v:"fn+backpackA"},{k:"func2",v:"fn+backpackB",s:"mv-new"}],l:[],c:[{k:"A.count",v:"0"},{k:"B.count",v:"0",s:"mv-new"}]},
+    {g:[{k:"func1",v:"fn+backpackA"},{k:"func2",v:"fn+backpackB"}],l:[],c:[{k:"A.count",v:"3",s:"mv-changed"},{k:"B.count",v:"0"}]},
+    {g:[{k:"func1",v:"fn+backpackA"},{k:"func2",v:"fn+backpackB"}],l:[],c:[{k:"A.count",v:"3"},{k:"B.count",v:"1",s:"mv-changed"}]},
+    {g:[{k:"func1",v:"fn+backpackA"},{k:"func2",v:"fn+backpackB"}],l:[],c:[{k:"A.count",v:"3"},{k:"B.count",v:"1"}]},
+  ],
+}]
+},
+{num:12,title:"Helper functions",tag:"once · partial · composable",
+concept:"Helper functions are small, composable utility decorators — functions that wrap other functions to add a single constraint. <code>once</code> ensures a function runs exactly once, no matter how many times it's called. <code>partial</code> pre-fills arguments to create specialised functions. These patterns appear throughout real codebases, frameworks, and interviews. They're small enough to understand completely and powerful enough to be genuinely useful.",
+callout:null,refs:[],
+memPanelTitle:"Helper closure state",
+legend:[{color:"var(--purple)",label:"Outer (decorator)"},{color:"var(--green)",label:"Inner (wrapped fn)"},{color:"var(--orange)",label:"Fixed state"}],
+examples:[{
+  name:"once — run exactly one time",
+  desc:"<code>once</code> wraps a function so it only executes on the first call. Every subsequent call returns the first result without re-running. Classic use: initialisation that must never run twice.",
+  code:`<span class="kw">function</span> <span id="gc0">once</span>(fn) {
+  <span class="kw">let</span> <span id="gc1">called</span> = <span class="kw">false</span>;
+  <span class="kw">let</span> <span id="gc2">result</span>;
+  <span class="kw">return</span> <span id="gc3"><span class="kw">function</span>(...args) {
+    <span class="kw">if</span> (called) <span class="kw">return</span> result;
+    called = <span class="kw">true</span>;
+    result = <span id="gc4">fn(...args)</span>;
+    <span class="kw">return</span> result;
+  }</span>;
+}
+
+<span class="kw">const</span> <span id="gc5">init</span> = once(() => {
+  console.log(<span class="str">"DB connected"</span>);
+  <span class="kw">return</span> <span class="str">"connection"</span>;
+});
+
+<span id="gc6">init()</span>; <span class="cm">// "DB connected" → "connection"</span>
+init();  <span class="cm">// silent  → "connection"</span>`,
+  steps:["once decorator defined","init = once(dbFn) — backpack: {called:false}","init() — first call: called=false, gate open","fn() runs — 'DB connected' logged","called=true, result cached — gate closed","init() again — called=true → return cached"],
+  hl:["gc0","gc5","gc6","gc4","gc2","gc3"],
+  frames:[
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"once(dbFn)",t:"f-hof"}],
+    [{l:"global()",t:"f-global"},{l:"init()",t:"f-hof"}],
+    [{l:"global()",t:"f-global"},{l:"init()",t:"f-hof"},{l:"dbFn()",t:"f-active"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"init() — cached",t:"f-active"}],
+  ],
+  flow:[
+    [{t:"d-input",i:"→",v:"once(fn) — wraps fn with gate"}],
+    [{t:"d-transform",i:"⇒",v:"backpack: {called:false, result:undefined}"},{t:"log-purple",i:"H",v:"init = wrapper + backpack"}],
+    [{t:"d-input",i:"→",v:"init() — first call"},{t:"d-transform",i:"⇒",v:"called? false → gate open"}],
+    [{t:"d-transform",i:"⇒",v:"fn() runs"},{t:"log-orange",i:">",v:'> "DB connected"'}],
+    [{t:"d-transform",i:"⇒",v:"called=true, result='connection'"},{t:"log-purple",i:"H",v:"gate now permanently closed"}],
+    [{t:"d-input",i:"→",v:"init() again"},{t:"d-output",i:"←",v:"'connection' instantly — fn never runs again"}],
+  ],
+  mem:[
+    {g:[{k:"once",v:"fn ref"}],l:[],c:[]},
+    {g:[{k:"once",v:"fn ref"},{k:"init",v:"fn+backpack",s:"mv-new"}],l:[],c:[{k:"called",v:"false",s:"mv-new"},{k:"result",v:"undefined",s:"mv-new"}]},
+    {g:[{k:"init",v:"fn+backpack"}],l:[{k:"args",v:"[]"}],c:[{k:"called",v:"false"}]},
+    {g:[{k:"init",v:"fn+backpack"}],l:[{k:"running",v:"dbFn()",s:"mv-new"}],c:[{k:"called",v:"false"}]},
+    {g:[{k:"init",v:"fn+backpack"}],l:[],c:[{k:"called",v:"true",s:"mv-changed"},{k:"result",v:"'connection'",s:"mv-changed"}]},
+    {g:[{k:"init",v:"fn+backpack"}],l:[{k:"HIT",v:"called=true",s:"mv-changed"}],c:[{k:"called",v:"true"},{k:"result",v:"'connection'"}]},
+  ],
+}]
+},
+{num:13,title:"Async JavaScript",tag:"event loop · setTimeout · fetch · microtask",
+concept:"JavaScript is single-threaded — it can only do one thing at a time. Async JS is the answer to 'how do we handle slow operations (network, timers) without blocking?' The answer: hand the slow work to the browser's Web APIs, keep running JS synchronously, and pick up the result via a callback when the stack is clear. The <strong>event loop</strong> orchestrates this: it checks the call stack, and when it's empty, it pulls the next task from the queue. Microtasks (Promises) drain completely before macrotasks (setTimeout).",
+callout:null,refs:[],
+memPanelTitle:"Queue state",
+legend:[{color:"var(--purple)",label:"Sync (call stack)"},{color:"var(--green)",label:"Microtask queue"},{color:"var(--orange)",label:"Web API / callback queue"}],
+examples:[{
+  name:"setTimeout — the event loop in action",
+  desc:"Even <code>setTimeout(..., 0)</code> fires after all synchronous code. JS hands the callback to the Web API, keeps running, and only picks it up when the stack is empty.",
+  code:`console.log(<span id="gc0"><span class="str">"1 — sync"</span></span>);
+
+<span id="gc1">setTimeout</span>(() =>
+  console.log(<span class="str">"3 — async"</span>)
+, 0);
+
+console.log(<span id="gc2"><span class="str">"2 — also sync"</span></span>);
+
+<span class="cm">// Output order:
+// 1 — sync
+// 2 — also sync
+// 3 — async  ← always last</span>`,
+  steps:["'1 — sync' logged — synchronous","setTimeout hands cb to Web API","'2 — also sync' logged — stack still running","Stack empties — event loop checks queue","Timer fires — cb moves to callback queue","Event loop dequeues cb — '3 — async' logged"],
+  hl:["gc0","gc1","gc2","gc2","gc1","gc1"],
+  frames:[
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"cb()",t:"f-special"}],
+  ],
+  flow:[
+    [{t:"log-orange",i:">",v:'> "1 — sync"'}],
+    [{t:"d-input",i:"→",v:"setTimeout(cb, 0)"},{t:"d-special",i:"!",v:"[Web API] timer started — JS continues"}],
+    [{t:"log-orange",i:">",v:'> "2 — also sync"'}],
+    [{t:"d-transform",i:"⇒",v:"stack empty — event loop checks"},{t:"log-purple",i:"H",v:"event loop: any queued tasks?"}],
+    [{t:"d-transform",i:"⇒",v:"timer fired → cb → callback queue"},{t:"d-special",i:"!",v:"[callback queue] cb waiting"}],
+    [{t:"d-transform",i:"⇒",v:"event loop dequeues cb"},{t:"log-orange",i:">",v:'> "3 — async"'}],
+  ],
+  mem:[
+    {g:[],l:[],c:[]},
+    {g:[{k:"[WebAPI]",v:"timer:0ms",s:"mv-new"}],l:[],c:[]},
+    {g:[{k:"[WebAPI]",v:"timer running"}],l:[],c:[]},
+    {g:[{k:"[WebAPI]",v:"timer done"}],l:[],c:[]},
+    {g:[{k:"[cbQueue]",v:"cb waiting",s:"mv-new"}],l:[],c:[]},
+    {g:[{k:"[cbQueue]",v:"drained"}],l:[{k:"cb",v:"running",s:"mv-changed"}],c:[]},
+  ],
+}]
+},
+{num:14,title:"The browser environment",tag:"Web APIs · DOM · fetch · timers",
+concept:"JavaScript doesn't run in isolation — it runs inside a host environment. In the browser, that host provides <strong>Web APIs</strong>: <code>document</code> (HTML/DOM), <code>fetch</code>/<code>XHR</code> (Network), <code>setTimeout</code> (Timers), Console, Sockets. These are <em>not</em> JavaScript — they're browser features JS gets access to. When you call <code>fetch()</code>, the browser's networking layer handles the HTTP — JS just describes what it wants and continues running. This is why the same JS code behaves differently in Node.js versus a browser.",
+callout:null,refs:[],
+memPanelTitle:"Web API state",
+legend:[{color:"var(--purple)",label:"JS thread"},{color:"var(--green)",label:"Web API layer"},{color:"var(--orange)",label:"Callback / queue"}],
+examples:[{
+  name:"DOM — document is a Web API",
+  desc:"<code>document</code> is the browser handing JS a reference to the rendered HTML tree. Every DOM method crosses the JS/browser boundary. Event listeners register callbacks in the browser's event system.",
+  code:`<span class="cm">// document is a Web API — not JS</span>
+<span class="kw">const</span> <span id="gc0">btn</span> = document.<span id="gc1">querySelector</span>(<span class="str">"#btn"</span>);
+
+<span id="gc2">btn.addEventListener</span>(<span class="str">"click"</span>, <span id="gc3">() => {
+  console.log(<span class="str">"clicked!"</span>);
+}</span>);
+
+<span class="cm">// JS registers callback with browser
+// Browser watches for click event
+// Click → cb → callback queue → JS</span>
+
+<span id="gc4">btn.textContent</span> = <span class="str">"Click me"</span>;`,
+  steps:["JS asks browser for DOM element via querySelector","Browser returns element reference","addEventListener — JS gives cb to browser","Browser holds cb — watches for click (not JS)","User clicks — browser pushes cb to callback queue","Event loop picks cb up — runs in JS"],
+  hl:["gc0","gc1","gc2","gc3","gc4","gc3"],
+  frames:[
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"click cb()",t:"f-special"}],
+  ],
+  flow:[
+    [{t:"d-input",i:"→",v:"document.querySelector('#btn')"},{t:"d-special",i:"!",v:"[Web API] browser searches DOM tree"}],
+    [{t:"d-transform",i:"⇒",v:"browser returns DOM element reference"},{t:"log-green",i:"f",v:"btn = DOM element ref"}],
+    [{t:"d-input",i:"→",v:"btn.addEventListener('click', cb)"},{t:"d-special",i:"!",v:"[Web API] browser registers listener"}],
+    [{t:"d-special",i:"!",v:"cb stored in browser event system"},{t:"log-purple",i:"H",v:"JS continues — browser watches for click"}],
+    [{t:"d-transform",i:"⇒",v:"click → cb → callback queue"},{t:"d-special",i:"!",v:"[cbQueue] cb waiting"}],
+    [{t:"d-transform",i:"⇒",v:"event loop: stack empty → run cb"},{t:"log-orange",i:">",v:'> "clicked!"'}],
+  ],
+  mem:[
+    {g:[],l:[],c:[]},
+    {g:[{k:"btn",v:"DOM element ref",s:"mv-new"}],l:[],c:[]},
+    {g:[{k:"btn",v:"DOM element ref"}],l:[],c:[]},
+    {g:[{k:"btn",v:"DOM element ref"},{k:"[browser]",v:"watching click",s:"mv-new"}],l:[],c:[]},
+    {g:[{k:"btn",v:"DOM element ref"},{k:"[cbQueue]",v:"click cb",s:"mv-changed"}],l:[],c:[]},
+    {g:[{k:"btn",v:"DOM element ref"}],l:[{k:"event",v:"MouseEvent",s:"mv-new"}],c:[]},
+  ],
+}]
+},
+{num:15,title:"The three queues",tag:"Priority 1·2·3 · microtask · macrotask",
+concept:"Your diagram explicitly assigned priorities. <strong>Priority 1: Call stack</strong> — LIFO, synchronous. JS never interrupts a running call stack. <strong>Priority 2: Microtask queue</strong> — Promises and async/await. Drains <em>completely</em> after each call stack task before anything else runs. <strong>Priority 3: Callback queue (macrotask)</strong> — FIFO, holds setTimeout, setInterval, DOM events. Only runs when <em>both</em> the call stack and microtask queue are empty. The event loop orchestrates all three.",
+callout:null,
+refs:[
+  {lbl:"Priority 1",cls:"",title:"Call stack",sub:"LIFO · sync · always first"},
+  {lbl:"Priority 2",cls:"",title:"Microtask queue",sub:"Promises · async/await · drains fully"},
+  {lbl:"Priority 3",cls:"",title:"Callback queue",sub:"FIFO · setTimeout · DOM events"},
+],
+memPanelTitle:"Queue state",
+legend:[{color:"var(--purple)",label:"P1 — Call stack"},{color:"var(--green)",label:"P2 — Microtask"},{color:"var(--orange)",label:"P3 — Callback"}],
+examples:[{
+  name:"All three queues — definitive order",
+  desc:"Code that touches all three priority levels. The output order reveals the exact priority system: sync → microtask → macrotask.",
+  code:`console.log(<span id="gc0"><span class="str">"1 sync start"</span></span>); <span class="cm">// P1</span>
+
+setTimeout(<span id="gc1">() =>
+  console.log(<span class="str">"4 macrotask"</span>)</span>
+, 0);                     <span class="cm">// P3</span>
+
+Promise.resolve()
+  .then(<span id="gc2">() =>
+    console.log(<span class="str">"3 microtask"</span>)</span>
+  );                      <span class="cm">// P2</span>
+
+console.log(<span id="gc3"><span class="str">"2 sync end"</span></span>); <span class="cm">// P1</span>
+
+<span class="cm">// Output: 1 → 2 → 3 → 4</span>`,
+  steps:['"1 sync start" — P1 call stack','setTimeout → P3 macrotask queue','Promise.then → P2 microtask queue','"2 sync end" — P1 call stack empties','P2 drains: "3 microtask" fires','P2 empty → P3 runs: "4 macrotask"'],
+  hl:["gc0","gc1","gc2","gc3","gc2","gc1"],
+  frames:[
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"microtask cb",t:"f-cb"}],
+    [{l:"global()",t:"f-global"},{l:"setTimeout cb",t:"f-special"}],
+  ],
+  flow:[
+    [{t:"log-purple",i:"H",v:'> "1 sync start"'}],
+    [{t:"d-input",i:"→",v:"setTimeout(cb,0)"},{t:"d-special",i:"!",v:"[P3 macro queue] cb registered"}],
+    [{t:"d-input",i:"→",v:"Promise.resolve().then(cb)"},{t:"log-green",i:"f",v:"[P2 micro queue] cb registered"}],
+    [{t:"log-purple",i:"H",v:'> "2 sync end"  → stack now empty'}],
+    [{t:"d-transform",i:"⇒",v:"P2 drains first"},{t:"log-orange",i:">",v:'> "3 microtask"  (Promise wins)'}],
+    [{t:"d-transform",i:"⇒",v:"P2 empty → P3 runs"},{t:"log-orange",i:">",v:'> "4 macrotask"  (setTimeout last)'}],
+  ],
+  mem:[
+    {g:[],l:[],c:[]},
+    {g:[{k:"[P3 macro]",v:"setTimeout cb",s:"mv-new"}],l:[],c:[]},
+    {g:[{k:"[P3 macro]",v:"setTimeout cb"},{k:"[P2 micro]",v:"Promise cb",s:"mv-new"}],l:[],c:[]},
+    {g:[{k:"[P3 macro]",v:"setTimeout cb"},{k:"[P2 micro]",v:"Promise cb"}],l:[],c:[]},
+    {g:[{k:"[P3 macro]",v:"setTimeout cb"},{k:"[P2 micro]",v:"drained ✓",s:"mv-changed"}],l:[],c:[]},
+    {g:[{k:"[P3 macro]",v:"drained ✓",s:"mv-changed"}],l:[],c:[]},
+  ],
+}]
+},
+{num:16,title:"Promises",tag:"pending · fulfilled · rejected · .then chaining",
+concept:"A <strong>Promise</strong> is an object that represents the eventual result of an async operation. It has three states: <strong>Pending</strong> (in flight), <strong>Fulfilled</strong> (success with value), <strong>Rejected</strong> (failed with reason). Once settled, a Promise never changes state. <code>.then()</code> always returns a new Promise — that's what makes chaining possible. The four static methods handle multiple Promises: <code>Promise.all</code> (wait for all), <code>Promise.race</code> (first completes), <code>Promise.allSettled</code> (all results), <code>Promise.any</code> (first success).",
+callout:null,
+refs:[
+  {lbl:"Pending",cls:"",title:"In flight",sub:"operation not yet settled"},
+  {lbl:"Fulfilled",cls:"",title:"Success",sub:"value locked in"},
+  {lbl:"Rejected",cls:"",title:"Failed",sub:"reason locked in"},
+],
+memPanelTitle:"Promise state",
+legend:[{color:"var(--purple)",label:"Promise flow"},{color:"var(--green)",label:"Resolved"},{color:"var(--orange)",label:"Pending"},{color:"var(--red)",label:"Rejected"}],
+examples:[{
+  name:".then() chaining",
+  desc:"Each <code>.then()</code> returns a new Promise. Values flow down the chain. A thrown error skips to the nearest <code>.catch()</code>.",
+  code:`fetch(<span id="gc0"><span class="str">"/api/user/1"</span></span>)
+  .<span id="gc1">then</span>(res => <span id="gc2">res.json()</span>)
+  .<span id="gc3">then</span>(user => {
+    console.log(<span id="gc4">user.name</span>);
+    <span class="kw">return</span> <span id="gc5">user.id</span>;
+  })
+  .<span id="gc6">then</span>(id => {
+    console.log(<span class="str">"id:"</span>, id);
+  })
+  .catch(err => console.error(err));`,
+  steps:["fetch() — pending Promise, network request starts",".then(res.json) registered — waits for fetch","fetch resolves → .then fires → res.json() called",".then(user) fires — user.name logged","returns user.id → passes to next .then",".then(id) fires — id logged"],
+  hl:["gc0","gc1","gc2","gc3","gc4","gc6"],
+  frames:[
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:".then(res.json)",t:"f-cb"}],
+    [{l:"global()",t:"f-global"},{l:".then(user)",t:"f-active"}],
+    [{l:"global()",t:"f-global"},{l:".then(user)",t:"f-active"}],
+    [{l:"global()",t:"f-global"},{l:".then(id)",t:"f-active"}],
+  ],
+  flow:[
+    [{t:"d-input",i:"→",v:'fetch("/api/user/1")'},{t:"d-special",i:"!",v:"[Network API] HTTP GET started"}],
+    [{t:"d-input",i:"→",v:".then callbacks registered"},{t:"log-purple",i:"H",v:"chain built — waiting for first Promise"}],
+    [{t:"d-transform",i:"⇒",v:"fetch fulfilled → .then(res.json) fires"},{t:"log-green",i:"f",v:"res.json() returns new Promise"}],
+    [{t:"d-transform",i:"⇒",v:'.then(user) fires — user.name="Alice"'},{t:"log-orange",i:">",v:'> "Alice"'}],
+    [{t:"d-transform",i:"⇒",v:"returns user.id=1 → next .then"},{t:"log-purple",i:"H",v:"value flows down the chain"}],
+    [{t:"d-transform",i:"⇒",v:".then(id) fires"},{t:"log-orange",i:">",v:'> "id: 1"'}],
+  ],
+  mem:[
+    {g:[{k:"p1",v:"Promise{pending}",s:"mv-new"}],l:[],c:[]},
+    {g:[{k:"p1",v:"Promise{pending}"},{k:"p2",v:"Promise{pending}",s:"mv-new"}],l:[],c:[]},
+    {g:[{k:"p1",v:"Promise{fulfilled}",s:"mv-changed"}],l:[{k:"res",v:"Response",s:"mv-new"}],c:[]},
+    {g:[{k:"p2",v:"Promise{fulfilled}",s:"mv-changed"}],l:[{k:"user",v:"{name:'Alice',id:1}",s:"mv-new"}],c:[]},
+    {g:[],l:[{k:"return",v:"user.id=1",s:"mv-new"}],c:[]},
+    {g:[{k:"p3",v:"Promise{fulfilled}",s:"mv-new"}],l:[{k:"id",v:"1",s:"mv-new"}],c:[]},
+  ],
+}]
+},
+{num:17,title:"Async/Await",tag:"modern syntax · promises under the hood · try/catch",
+concept:"Your notes starred this and noted: 'modern syntax, cleaner way, promises under the hood.' Every <code>async</code> function automatically wraps its return value in a resolved Promise — <code>async function(){ return 'Hello' }</code> is identical to <code>async function(){ return Promise.resolve('Hello') }</code>. <code>await</code> pauses the <em>function</em> (not the thread) until the Promise resolves. The function's continuation is scheduled as a microtask. Use <code>try/catch</code> instead of <code>.catch()</code> — a rejected Promise inside an <code>await</code> throws.",
+callout:null,refs:[],
+memPanelTitle:"Async fn state",
+legend:[{color:"var(--purple)",label:"Sync execution"},{color:"var(--green)",label:"Resumed (microtask)"},{color:"var(--orange)",label:"Suspended at await"}],
+examples:[{
+  name:"await — suspends function, not thread",
+  desc:"<code>await</code> pauses <em>loadUser</em> — not the whole thread. Synchronous code after the call runs immediately. The function resumes as a microtask when the Promise resolves.",
+  code:`<span class="kw">async function</span> <span id="gc0">loadUser</span>() {
+  console.log(<span class="str" id="gc1">"start"</span>);
+  <span class="kw">const</span> res = <span id="gc2"><span class="kw">await</span> fetch</span>(<span class="str">"/api/user"</span>);
+  <span class="kw">const</span> user = <span id="gc3"><span class="kw">await</span> res.json()</span>;
+  console.log(<span id="gc4">user.name</span>);
+  <span class="kw">return</span> user;
+}
+
+console.log(<span id="gc5"><span class="str">"before"</span></span>);
+<span id="gc6">loadUser()</span>;
+console.log(<span class="str">"after"</span>);
+<span class="cm">// before → start → after → Alice</span>`,
+  steps:['"before" logged — sync','loadUser() called — "start" logged',"await fetch — loadUser suspends",'"after" logged — thread never blocked',"fetch resolves — microtask fires, loadUser resumes",'"Alice" logged — async function complete'],
+  hl:["gc5","gc1","gc2","gc5","gc3","gc4"],
+  frames:[
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"loadUser()",t:"f-hof"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"loadUser() resumed",t:"f-cb"}],
+    [{l:"global()",t:"f-global"},{l:"loadUser() resumed",t:"f-active"}],
+  ],
+  flow:[
+    [{t:"log-purple",i:"H",v:'> "before"'}],
+    [{t:"log-purple",i:"H",v:'> "start"  (sync)'}],
+    [{t:"d-input",i:"→",v:"await fetch('/api/user')"},{t:"d-special",i:"!",v:"loadUser suspended — [Network API] HTTP GET"}],
+    [{t:"log-purple",i:"H",v:'> "after"  thread never waited'}],
+    [{t:"d-transform",i:"⇒",v:"fetch resolves → [P2 micro] loadUser continuation"},{t:"log-green",i:"f",v:"loadUser resumes"}],
+    [{t:"log-orange",i:">",v:'> "Alice"  async fn complete'}],
+  ],
+  mem:[
+    {g:[],l:[],c:[]},
+    {g:[],l:[{k:"loadUser",v:"running sync",s:"mv-new"}],c:[]},
+    {g:[{k:"[network]",v:"fetch in flight",s:"mv-new"}],l:[],c:[{k:"loadUser",v:"suspended at await",s:"mv-new"}]},
+    {g:[{k:"[network]",v:"request in flight"}],l:[],c:[{k:"loadUser",v:"suspended"}]},
+    {g:[{k:"[network]",v:"response received",s:"mv-changed"},{k:"[P2 micro]",v:"continuation queued",s:"mv-new"}],l:[],c:[{k:"loadUser",v:"queued to resume",s:"mv-changed"}]},
+    {g:[{k:"[P2 micro]",v:"drained ✓",s:"mv-changed"}],l:[{k:"user",v:"{name:'Alice'}",s:"mv-new"}],c:[]},
+  ],
+}]
+},
+{num:18,title:"OOP & encapsulation",tag:"dot notation · data+functions · private vs public",
+concept:"<strong>Object-Oriented Programming</strong> in JS bundles data and the functions that operate on it together — encapsulation. Dot notation (<code>user.name</code>, <code>user.increment()</code>) is how you interact with that bundle. Encapsulation also gives you control over which properties are public (accessible to anyone) and which are private (only accessible inside the object's own methods). The modern approach uses <code>class</code> with <code>#</code>-prefixed fields for true private properties.",
+callout:null,refs:[],
+memPanelTitle:"Object memory",
+legend:[{color:"var(--purple)",label:"Object"},{color:"var(--green)",label:"Public property"},{color:"var(--orange)",label:"Private property"}],
+examples:[{
+  name:"class with #private fields",
+  desc:"<code>#score</code> is truly private — not accessible via dot notation outside the class. A getter provides read-only access. Methods are the only way to mutate private state.",
+  code:`<span class="kw">class</span> <span id="gc0">User</span> {
+  <span id="gc1">#score</span> = 0; <span class="cm">// truly private</span>
+
+  constructor(<span id="gc2">name, id</span>) {
+    <span class="kw">this</span>.userName = name;
+    <span class="kw">this</span>.userId   = id;
+  }
+
+  <span id="gc3">increment</span>() { <span class="kw">this</span>.#score++; <span class="kw">return</span> <span class="kw">this</span>.#score; }
+  get score()  { <span class="kw">return</span> <span class="kw">this</span>.#score; }
+}
+
+<span class="kw">const</span> <span id="gc4">u1</span> = <span class="kw">new</span> User(<span class="str">"Alice"</span>, 1);
+<span id="gc5">u1.increment()</span>; <span class="cm">// 1</span>
+<span id="gc6">u1.score</span>;        <span class="cm">// 1 (getter)</span>
+<span class="cm">// u1.#score → SyntaxError</span>`,
+  steps:["class User defined — blueprint created","new User('Alice',1) — constructor runs","this.userName, this.userId public","#score=0 — private, inaccessible outside","u1.increment() — this.#score++ = 1","u1.score — getter returns #score"],
+  hl:["gc0","gc4","gc2","gc1","gc3","gc6"],
+  frames:[
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"User constructor",t:"f-hof"}],
+    [{l:"global()",t:"f-global"},{l:"User constructor",t:"f-hof"}],
+    [{l:"global()",t:"f-global"},{l:"User constructor",t:"f-active"}],
+    [{l:"global()",t:"f-global"},{l:"u1.increment()",t:"f-cb"}],
+    [{l:"global()",t:"f-global"},{l:"u1.score getter",t:"f-cb"}],
+  ],
+  flow:[
+    [{t:"d-input",i:"→",v:"class User defined"},{t:"log-purple",i:"H",v:"blueprint created"}],
+    [{t:"d-input",i:"→",v:"new User('Alice',1)"},{t:"d-transform",i:"⇒",v:"constructor called — this = new object"}],
+    [{t:"d-transform",i:"⇒",v:"this.userName='Alice', this.userId=1"},{t:"log-green",i:"f",v:"PUBLIC properties on u1"}],
+    [{t:"d-transform",i:"⇒",v:"#score=0"},{t:"log-orange",i:">",v:"PRIVATE — not accessible via dot notation"}],
+    [{t:"d-transform",i:"⇒",v:"this.#score++ → 1"},{t:"log-orange",i:">",v:"> 1"}],
+    [{t:"d-input",i:"→",v:"u1.score (getter)"},{t:"d-output",i:"←",v:"> 1 — read-only access to private"}],
+  ],
+  mem:[
+    {g:[{k:"User",v:"class ref",s:"mv-new"}],l:[],c:[]},
+    {g:[{k:"u1",v:"new object",s:"mv-new"}],l:[{k:"this",v:"u1"}],c:[]},
+    {g:[{k:"u1",v:"object ref"}],l:[{k:"userName",v:"'Alice'",s:"mv-new"},{k:"userId",v:"1",s:"mv-new"}],c:[]},
+    {g:[{k:"u1",v:"object ref"}],l:[{k:"userName",v:"'Alice'"},{k:"userId",v:"1"},{k:"#score",v:"0 (private)",s:"mv-special"}],c:[]},
+    {g:[{k:"u1",v:"object ref"}],l:[{k:"userName",v:"'Alice'"},{k:"userId",v:"1"},{k:"#score",v:"1 (private)",s:"mv-changed"}],c:[]},
+    {g:[{k:"u1",v:"object ref"}],l:[{k:"u1.score",v:"1 (via getter)",s:"mv-changed"}],c:[]},
+  ],
+}]
+},
+{num:19,title:"__proto__ & prototype chain",tag:"hidden property · lookup · delegation",
+concept:"Every object has a hidden <code>__proto__</code> property pointing to another object — its prototype. When you access a property and it's not found on the object itself, JS follows the <code>__proto__</code> link to the next object. If still not found, it follows that object's <code>__proto__</code>, and so on until it reaches <code>null</code>. This is <strong>delegation</strong>: methods live once on the prototype, shared by all instances. The full chain ends at <code>Object.prototype → null</code>.",
+callout:null,refs:[],
+memPanelTitle:"Prototype chain",
+legend:[{color:"var(--purple)",label:"Own property"},{color:"var(--green)",label:"Found on prototype"},{color:"var(--orange)",label:"Chain hop"}],
+examples:[{
+  name:"Property lookup — following __proto__",
+  desc:"JS first looks on the object itself. If not found, walks up <code>__proto__</code> links. Methods live once on the prototype, shared by all.",
+  code:`<span class="kw">const</span> <span id="gc0">animal</span> = {
+  breathe() { console.log(<span class="str">"breathing"</span>); }
+};
+
+<span class="kw">const</span> <span id="gc1">dog</span> = Object.create(animal);
+dog.name = <span class="str">"Rex"</span>;
+dog.bark = () => console.log(<span class="str">"woof"</span>);
+
+<span id="gc2">dog.name</span>;      <span class="cm">// "Rex" — own property</span>
+<span id="gc3">dog.bark()</span>;    <span class="cm">// "woof" — own method</span>
+<span id="gc4">dog.breathe()</span>; <span class="cm">// "breathing" ← via __proto__</span>
+<span id="gc5">dog.fly</span>;        <span class="cm">// undefined — not found</span>`,
+  steps:["animal with breathe method","dog = Object.create(animal) — __proto__ set","dog.name, dog.bark — own properties","dog.name — found on dog directly","dog.breathe() — NOT on dog, follow __proto__","dog.fly — chain exhausted → undefined"],
+  hl:["gc0","gc1","gc1","gc2","gc4","gc5"],
+  frames:[
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"__proto__.breathe",t:"f-special"}],
+    [{l:"global()",t:"f-global"}],
+  ],
+  flow:[
+    [{t:"d-input",i:"→",v:"animal = {breathe:fn}"}],
+    [{t:"d-input",i:"→",v:"dog=Object.create(animal)"},{t:"d-transform",i:"⇒",v:"dog.__proto__ → animal"}],
+    [{t:"d-input",i:"→",v:"dog.name='Rex', dog.bark=fn"},{t:"log-purple",i:"H",v:"OWN properties on dog"}],
+    [{t:"d-input",i:"→",v:"dog.name"},{t:"d-transform",i:"⇒",v:"found on dog — no chain walk"},{t:"log-green",i:"f",v:'> "Rex"'}],
+    [{t:"d-input",i:"→",v:"dog.breathe()"},{t:"d-transform",i:"⇒",v:"not on dog → __proto__ → animal.breathe ✓"},{t:"log-orange",i:">",v:'> "breathing"  (1 hop)'}],
+    [{t:"d-input",i:"→",v:"dog.fly"},{t:"d-transform",i:"⇒",v:"dog? No → animal? No → Object.prototype? No → null"},{t:"d-special",i:"!",v:"> undefined — chain exhausted"}],
+  ],
+  mem:[
+    {g:[{k:"animal",v:"{breathe:fn}",s:"mv-new"}],l:[],c:[]},
+    {g:[{k:"animal",v:"{breathe:fn}"},{k:"dog",v:"{}",s:"mv-new"}],l:[{k:"dog.__proto__",v:"→ animal",s:"mv-new"}],c:[]},
+    {g:[{k:"animal",v:"{breathe:fn}"},{k:"dog",v:"{name,bark}",s:"mv-changed"}],l:[{k:"dog.__proto__",v:"→ animal"}],c:[]},
+    {g:[],l:[{k:"lookup",v:"dog.name → found own",s:"mv-new"}],c:[]},
+    {g:[],l:[{k:"hop1",v:"→ animal.breathe ✓",s:"mv-changed"}],c:[]},
+    {g:[],l:[{k:"lookup",v:"dog.fly? No → null",s:"mv-special"},{k:"result",v:"undefined"}],c:[]},
+  ],
+}]
+},
+{num:20,title:"Object.create() & prototypal inheritance",tag:"explicit prototype · inheritance · delegation",
+concept:"<code>Object.create(proto)</code> creates a new empty object whose <code>__proto__</code> is set to <code>proto</code>. This is the most direct way to set up prototypal inheritance — one object delegates to another. Combined with a factory function, it gives you the power of inheritance without the ceremony of <code>class</code> syntax. <code>class extends</code> does the same thing automatically under the hood.",
+callout:null,refs:[],
+memPanelTitle:"Proto links",
+legend:[{color:"var(--purple)",label:"Object"},{color:"var(--green)",label:"Prototype"},{color:"var(--orange)",label:"Inherited method"}],
+examples:[{
+  name:"Object.create() — explicit prototype link",
+  desc:"Create an object with a shared prototype. Methods live once on the prototype object, accessible via <code>__proto__</code> delegation.",
+  code:`<span class="kw">const</span> <span id="gc0">userMethods</span> = {
+  increment() { <span class="kw">this</span>.score++; },
+  login() { console.log(<span class="kw">this</span>.name, <span class="str">"in"</span>); }
+};
+
+<span class="kw">function</span> <span id="gc1">createUser</span>(name, id) {
+  <span class="kw">const</span> user = <span id="gc2">Object.create(userMethods)</span>;
+  user.name  = name;
+  user.id    = id;
+  user.score = 0;
+  <span class="kw">return</span> user;
+}
+
+<span class="kw">const</span> <span id="gc3">u1</span> = createUser(<span class="str">"Alice"</span>, 1);
+<span id="gc4">u1.login()</span>;     <span class="cm">// "Alice in"</span>
+<span id="gc5">u1.increment()</span>; <span class="cm">// score=1</span>`,
+  steps:["userMethods — shared prototype object","createUser factory defined","Object.create(userMethods) — empty obj, __proto__=userMethods","user.name,id,score added as own properties","u1.login() — not on u1 → found via __proto__","u1.increment() — same delegation"],
+  hl:["gc0","gc1","gc2","gc2","gc4","gc5"],
+  frames:[
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"createUser('Alice')",t:"f-hof"}],
+    [{l:"global()",t:"f-global"},{l:"createUser('Alice')",t:"f-hof"}],
+    [{l:"global()",t:"f-global"},{l:"userMethods.login",t:"f-cb"}],
+    [{l:"global()",t:"f-global"},{l:"userMethods.increment",t:"f-cb"}],
+  ],
+  flow:[
+    [{t:"d-input",i:"→",v:"userMethods={increment,login}"},{t:"log-purple",i:"H",v:"shared prototype object"}],
+    [{t:"d-input",i:"→",v:"createUser factory defined"}],
+    [{t:"d-input",i:"→",v:"Object.create(userMethods)"},{t:"d-transform",i:"⇒",v:"user.__proto__ = userMethods"},{t:"log-green",i:"f",v:"proto link set"}],
+    [{t:"d-transform",i:"⇒",v:"user.name='Alice', id=1, score=0"},{t:"log-purple",i:"H",v:"OWN data — methods delegated"}],
+    [{t:"d-input",i:"→",v:"u1.login()"},{t:"d-transform",i:"⇒",v:"not on u1 → __proto__ → userMethods.login"},{t:"log-orange",i:">",v:'> "Alice in"'}],
+    [{t:"d-input",i:"→",v:"u1.increment()"},{t:"d-transform",i:"⇒",v:"delegated → this.score++ = 1"},{t:"log-orange",i:">",v:"u1.score: 0→1"}],
+  ],
+  mem:[
+    {g:[{k:"userMethods",v:"{increment,login}",s:"mv-new"}],l:[],c:[]},
+    {g:[{k:"userMethods",v:"{increment,login}"},{k:"createUser",v:"fn ref",s:"mv-new"}],l:[],c:[]},
+    {g:[{k:"u1",v:"{} empty",s:"mv-new"}],l:[{k:"u1.__proto__",v:"→ userMethods",s:"mv-new"}],c:[]},
+    {g:[{k:"u1",v:"{name:'Alice',id:1,score:0}",s:"mv-changed"}],l:[{k:"u1.__proto__",v:"→ userMethods"}],c:[]},
+    {g:[{k:"u1",v:"{name:'Alice',id:1,score:0}"}],l:[{k:"hop",v:"→ userMethods.login",s:"mv-new"}],c:[]},
+    {g:[{k:"u1",v:"{name:'Alice',id:1,score:1}",s:"mv-changed"}],l:[{k:"hop",v:"→ userMethods.increment",s:"mv-new"}],c:[]},
+  ],
+}]
+},
+{num:21,title:"`this` binding",tag:"call-site · four rules · implicit · explicit",
+concept:"Your note: <strong>'this is object ref from where function is called.'</strong> That is the whole rule. <code>this</code> is not where the function is <em>defined</em> — it's where it's <em>called</em> from. Four binding rules in priority order: <strong>new</strong> (highest) → <strong>explicit</strong> (.call/.apply/.bind) → <strong>implicit</strong> (obj.method()) → <strong>default</strong> (global/undefined in strict mode). Arrow functions have no own <code>this</code> — they inherit lexically.",
+callout:null,
+refs:[
+  {lbl:"Rule 1",cls:"",title:"new binding",sub:"this = fresh object"},
+  {lbl:"Rule 2",cls:"",title:"Explicit",sub:".call / .apply / .bind"},
+  {lbl:"Rule 3",cls:"",title:"Implicit",sub:"obj.method() — this=obj"},
+  {lbl:"Rule 4",cls:"",title:"Default",sub:"global or undefined (strict)"},
+],
+memPanelTitle:"this context",
+legend:[{color:"var(--purple)",label:"this binding"},{color:"var(--green)",label:"Method call"},{color:"var(--orange)",label:"Lost this"}],
+examples:[{
+  name:"Implicit binding — called on an object",
+  desc:"When a function is called as <code>obj.fn()</code>, <code>this</code> is that object. Remove the dot and you lose <code>this</code>.",
+  code:`<span class="kw">const</span> <span id="gc0">user</span> = {
+  name: <span class="str">"Alice"</span>,
+  score: 0,
+  <span id="gc1">greet</span>() {
+    console.log(<span class="str">"Hi"</span>, <span id="gc2"><span class="kw">this</span>.name</span>);
+  },
+  <span id="gc3">increment</span>() { <span id="gc4"><span class="kw">this</span>.score</span>++; }
+};
+
+<span id="gc5">user.greet()</span>;     <span class="cm">// "Hi Alice"</span>
+<span id="gc6">user.increment()</span>; <span class="cm">// score=1</span>
+
+<span class="cm">// Lose the dot — lose this</span>
+<span class="kw">const</span> fn = user.greet;
+fn(); <span class="cm">// "Hi undefined" ← this = global</span>`,
+  steps:["user object with methods","user.greet() — call site: user","this = user (implicit binding rule)","this.name = user.name = 'Alice'","user.increment() — this.score++","fn() without dot — this = global (lost)"],
+  hl:["gc0","gc5","gc2","gc2","gc6","gc3"],
+  frames:[
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"user.greet()",t:"f-special"}],
+    [{l:"global()",t:"f-global"},{l:"user.greet()",t:"f-special"}],
+    [{l:"global()",t:"f-global"},{l:"user.greet()",t:"f-active"}],
+    [{l:"global()",t:"f-global"},{l:"user.increment()",t:"f-active"}],
+    [{l:"global()",t:"f-global"},{l:"fn()",t:"f-cb"}],
+  ],
+  flow:[
+    [{t:"d-input",i:"→",v:"user={name:'Alice',score:0,greet,increment}"}],
+    [{t:"d-input",i:"→",v:"user.greet() — call site: user"},{t:"d-transform",i:"⇒",v:"this = user (implicit binding)"}],
+    [{t:"log-purple",i:"H",v:"this is default param set to call-site object"}],
+    [{t:"d-transform",i:"⇒",v:"this.name = user.name = 'Alice'"},{t:"log-orange",i:">",v:'> "Hi Alice"'}],
+    [{t:"d-input",i:"→",v:"user.increment()"},{t:"d-transform",i:"⇒",v:"this=user → user.score: 0→1"}],
+    [{t:"d-input",i:"→",v:"const fn=user.greet; fn()"},{t:"d-special",i:"!",v:"no dot → this=global"},{t:"log-orange",i:">",v:'> "Hi undefined" ← lost this'}],
+  ],
+  mem:[
+    {g:[{k:"user",v:"{name:'Alice',score:0}",s:"mv-new"}],l:[],c:[]},
+    {g:[{k:"user",v:"{name:'Alice',score:0}"}],l:[{k:"this",v:"user (call-site)",s:"mv-special"}],c:[]},
+    {g:[{k:"user",v:"{name:'Alice',score:0}"}],l:[{k:"this",v:"user"},{k:"[default param]",v:"this:set at call-time",s:"mv-new"}],c:[]},
+    {g:[{k:"user",v:"{name:'Alice',score:0}"}],l:[{k:"this.name",v:"'Alice'",s:"mv-new"}],c:[]},
+    {g:[{k:"user",v:"{name:'Alice',score:1}",s:"mv-changed"}],l:[{k:"this",v:"user"},{k:"this.score",v:"1",s:"mv-changed"}],c:[]},
+    {g:[{k:"user",v:"{name:'Alice',score:1}"}],l:[{k:"this",v:"global (lost!)",s:"mv-special"}],c:[]},
+  ],
+}]
+},
+{num:22,title:"Function duality",tag:"object + function · .call · .apply · .bind",
+concept:"Your diagram: <strong>JS function — duality — Object | Function. Object → can have properties → which can be objects themselves.</strong> Every function is simultaneously callable (<code>fn()</code>) AND an object with properties (<code>fn.name</code>, <code>fn.length</code>, <code>fn.prototype</code>, <code>fn.call</code>). This is why <code>.call()</code>, <code>.apply()</code>, and <code>.bind()</code> are just methods on the function object — found via the prototype chain. This duality is the foundation of callbacks, HOFs, decorators, and the prototype system.",
+callout:null,refs:[],
+memPanelTitle:"Function as object",
+legend:[{color:"var(--purple)",label:"As object (properties)"},{color:"var(--green)",label:"As function (callable)"},{color:"var(--orange)",label:".call/.apply/.bind"}],
+examples:[{
+  name:".bind() — locking this permanently",
+  desc:"<code>.bind(obj)</code> returns a new function with <code>this</code> permanently locked. Also supports partial application — pre-filling arguments.",
+  code:`<span class="kw">function</span> <span id="gc0">greet</span>(greeting) {
+  console.log(greeting, <span class="kw">this</span>.name);
+}
+
+<span class="kw">const</span> alice = { name: <span class="str">"Alice"</span> };
+
+<span class="cm">// .call — invoke immediately, set this</span>
+<span id="gc1">greet.call</span>(alice, <span class="str">"Hi"</span>);  <span class="cm">// "Hi Alice"</span>
+
+<span class="cm">// .bind — returns new fn, this locked</span>
+<span class="kw">const</span> <span id="gc2">greetAlice</span> = greet.<span id="gc3">bind</span>(alice);
+<span id="gc4">greetAlice</span>(<span class="str">"Hey"</span>); <span class="cm">// "Hey Alice"</span>
+
+<span class="cm">// Partial application via bind</span>
+<span class="kw">const</span> multiply = (a, b) => a * b;
+<span class="kw">const</span> <span id="gc5">double</span>   = multiply.bind(<span class="kw">null</span>, 2);
+<span id="gc6">double</span>(5);  <span class="cm">// multiply(2,5) → 10</span>`,
+  steps:["greet defined — has .call,.bind on Function.prototype","greet.call(alice,'Hi') — this forced to alice","greet.bind(alice) — returns new fn, this locked","greetAlice('Hey') — this permanently = alice","multiply.bind(null,2) — partial application","double(5) → multiply(2,5) = 10"],
+  hl:["gc0","gc1","gc3","gc4","gc5","gc6"],
+  frames:[
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"greet.call(alice)",t:"f-special"}],
+    [{l:"global()",t:"f-global"},{l:"greet.bind(alice)",t:"f-hof"}],
+    [{l:"global()",t:"f-global"},{l:"greetAlice('Hey')",t:"f-active"}],
+    [{l:"global()",t:"f-global"},{l:"multiply.bind(null,2)",t:"f-hof"}],
+    [{l:"global()",t:"f-global"},{l:"double(5)",t:"f-active"}],
+  ],
+  flow:[
+    [{t:"d-input",i:"→",v:"greet=fn — also an object with .call,.bind"},{t:"log-purple",i:"H",v:"function duality: callable AND object"}],
+    [{t:"d-input",i:"→",v:"greet.call(alice,'Hi')"},{t:"d-special",i:"!",v:"this forced to alice"},{t:"log-orange",i:">",v:'> "Hi Alice"'}],
+    [{t:"d-input",i:"→",v:"greet.bind(alice)"},{t:"d-transform",i:"⇒",v:"returns new fn with this locked to alice"}],
+    [{t:"d-input",i:"→",v:"greetAlice('Hey')"},{t:"d-special",i:"!",v:"this=alice permanently"},{t:"log-orange",i:">",v:'> "Hey Alice"'}],
+    [{t:"d-input",i:"→",v:"multiply.bind(null,2)"},{t:"d-transform",i:"⇒",v:"backpack: {fn:multiply, preArgs:[2]}"},{t:"log-purple",i:"H",v:"double = partial multiply"}],
+    [{t:"d-input",i:"→",v:"double(5)"},{t:"d-transform",i:"⇒",v:"multiply(2,5)=10"},{t:"d-output",i:"←",v:"> 10"}],
+  ],
+  mem:[
+    {g:[{k:"greet",v:"fn (obj+callable)"}],l:[],c:[]},
+    {g:[{k:"greet",v:"fn"},{k:"alice",v:"{name:'Alice'}"}],l:[{k:"this",v:"alice (forced)",s:"mv-special"}],c:[]},
+    {g:[{k:"greetAlice",v:"bound fn",s:"mv-new"}],l:[],c:[{k:"bound.this",v:"alice (locked)",s:"mv-special"}]},
+    {g:[{k:"greetAlice",v:"bound fn"}],l:[{k:"this",v:"alice (permanent)",s:"mv-special"}],c:[{k:"bound.this",v:"alice (locked)"}]},
+    {g:[{k:"double",v:"bound fn",s:"mv-new"}],l:[],c:[{k:"bound.fn",v:"multiply"},{k:"bound.pre",v:"[2]",s:"mv-new"}]},
+    {g:[{k:"double",v:"bound fn"}],l:[{k:"a",v:"2 (pre-filled)"},{k:"b",v:"5"},{k:"return",v:"10",s:"mv-new"}],c:[]},
+  ],
+}]
+},
+{num:23,title:"The `new` keyword",tag:"four steps · auto object creation · returns",
+concept:"Your note to self: <em>'OOP lil bit feels like a Lego blocks of objects — created and assembled as needed.'</em> <code>new</code> is the assembler. When you write <code>new Constructor(args)</code>, JS performs four steps automatically: (1) creates an empty <code>{}</code>, (2) sets its <code>__proto__</code> to <code>Constructor.prototype</code>, (3) runs the constructor with <code>this</code> bound to the new object, (4) returns <code>this</code> implicitly. Your notes: 'new keyword → auto object creation and returns.'",
+callout:{type:"callout-orange",text:"Note to self: 'OOP lil bit feels like Lego blocks of objects — created and assembled as needed.' new is the factory that assembles the blocks."},
+refs:[
+  {lbl:"Step 1",cls:"",title:"Create {}",sub:"empty object made"},
+  {lbl:"Step 2",cls:"",title:"Set __proto__",sub:"link to Constructor.prototype"},
+  {lbl:"Step 3",cls:"",title:"Run constructor",sub:"this.x = x assigned"},
+  {lbl:"Step 4",cls:"",title:"Return this",sub:"implicit — no return needed"},
+],
+memPanelTitle:"new — 4 steps",
+legend:[{color:"var(--purple)",label:"Constructor fn"},{color:"var(--green)",label:"Prototype methods"},{color:"var(--orange)",label:"new step"}],
+examples:[{
+  name:"The four steps — animated",
+  desc:"Step through exactly what <code>new</code> does. Each step is a separate automatic action by the JS engine — 'auto object creation and returns' as your notes said.",
+  code:`<span class="kw">function</span> <span id="gc0">User</span>(a, b) {
+  <span id="gc1"><span class="kw">this</span>.a</span> = a;
+  <span id="gc2"><span class="kw">this</span>.b</span> = b;
+}
+
+User.prototype.<span id="gc3">incrementFn</span> = <span class="kw">function</span>() {
+  <span class="kw">this</span>.score = (<span class="kw">this</span>.score || 0) + 1;
+  <span class="kw">return</span> <span class="kw">this</span>.score;
+};
+User.prototype.<span id="gc4">loginFn</span> = <span class="kw">function</span>() {
+  console.log(<span class="str">"login"</span>, <span class="kw">this</span>.a);
+};
+
+<span class="kw">const</span> <span id="gc5">obj</span> = <span class="kw">new</span> User(<span class="str">"Alice"</span>, 42);
+<span id="gc6">obj.loginFn()</span>; <span class="cm">// "login Alice"</span>`,
+  steps:["Constructor + prototype defined","new → Step 1: {} created","new → Step 2: {}.__proto__ = User.prototype","new → Step 3: constructor, this.a='Alice'","new → Step 4: this returned as obj","obj.loginFn() — found via __proto__"],
+  hl:["gc0","gc5","gc5","gc1","gc5","gc6"],
+  frames:[
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"new User()",t:"f-special"}],
+    [{l:"global()",t:"f-global"},{l:"new User()",t:"f-special"}],
+    [{l:"global()",t:"f-global"},{l:"User constructor",t:"f-hof"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"User.proto.loginFn",t:"f-cb"}],
+  ],
+  flow:[
+    [{t:"d-input",i:"→",v:"User constructor + User.prototype defined"}],
+    [{t:"d-special",i:"!",v:"Step 1: JS creates {} (empty object)"},{t:"log-orange",i:">",v:"'initially empty' — your note"}],
+    [{t:"d-special",i:"!",v:"Step 2: {}.__proto__ = User.prototype"},{t:"log-green",i:"f",v:"incrementFn, loginFn now accessible"}],
+    [{t:"d-special",i:"!",v:"Step 3: constructor runs, this={}"},{t:"d-transform",i:"⇒",v:"this.a='Alice', this.b=42"}],
+    [{t:"d-special",i:"!",v:"Step 4: this returned implicitly"},{t:"log-orange",i:">",v:"auto returns — your note exactly"}],
+    [{t:"d-input",i:"→",v:"obj.loginFn()"},{t:"d-transform",i:"⇒",v:"not on obj → __proto__ → loginFn"},{t:"log-orange",i:">",v:'> "login Alice"'}],
+  ],
+  mem:[
+    {g:[{k:"User",v:"constructor fn"},{k:"User.prototype",v:"{incrementFn,loginFn}",s:"mv-new"}],l:[],c:[]},
+    {g:[{k:"User",v:"constructor fn"}],l:[{k:"Step1",v:"{} created",s:"mv-special"}],c:[]},
+    {g:[{k:"User",v:"constructor fn"}],l:[{k:"Step2",v:"__proto__=User.proto",s:"mv-special"}],c:[]},
+    {g:[{k:"User",v:"constructor fn"}],l:[{k:"this.a",v:"'Alice'",s:"mv-new"},{k:"this.b",v:"42",s:"mv-new"}],c:[]},
+    {g:[{k:"obj",v:"{a:'Alice',b:42}",s:"mv-new"}],l:[{k:"Step4",v:"return this",s:"mv-special"}],c:[{k:"obj.__proto__",v:"→ User.prototype",s:"mv-new"}]},
+    {g:[{k:"obj",v:"{a:'Alice',b:42}"}],l:[{k:"hop",v:"→ User.proto.loginFn",s:"mv-changed"}],c:[{k:"obj.__proto__",v:"→ User.prototype"}]},
+  ],
+}]
+},
+{num:24,title:"class — the blueprint syntax",tag:"syntactic sugar · constructor · extends · super",
+concept:"Your notes: <strong>'class — new syntactic way to execute the same prototyping → function/object combo.' Blueprint/template → Constructor creates new objects which can be used as many instances with the new keyword.</strong> <code>class</code> creates the same constructor fn + prototype structure from Ch.23, just with cleaner syntax. Methods go onto <code>C.prototype</code> automatically. <code>typeof MyClass === 'function'</code> — it's still a function under the hood. <code>extends</code> sets up the prototype chain; <code>super()</code> calls the parent constructor.",
+callout:{type:"callout-green",text:"Blueprint/template → Constructor creates new objects which can be used as many instances with the new keyword. — your notes"},
+refs:[
+  {lbl:"Constructor",cls:"",title:"Own data",sub:"this.x = x  per instance"},
+  {lbl:"Methods",cls:"",title:"Shared behaviour",sub:"go on C.prototype"},
+  {lbl:"new C()",cls:"",title:"Creates instance",sub:"same 4 steps as Ch.23"},
+],
+memPanelTitle:"Class memory",
+legend:[{color:"var(--purple)",label:"Class / blueprint"},{color:"var(--green)",label:"Instance"},{color:"var(--orange)",label:"Class machinery"}],
+examples:[{
+  name:"Your class diagram — brought to life",
+  desc:"Exactly the code from your notes: <code>class C</code> with <code>constructor(a,b)</code>, <code>increment()</code>, <code>login()</code>. Then <code>const x = new C('test', 7)</code> and <code>x.increment()</code>.",
+  code:`<span class="kw">class</span> <span id="gc0">C</span> {
+  <span id="gc1">constructor</span>(a, b) {
+    <span class="kw">this</span>.a = a;
+    <span class="kw">this</span>.b = b;
+    <span class="kw">this</span>.score = 0;
+  }
+  <span id="gc2">increment</span>() { <span class="kw">this</span>.score++; <span class="kw">return</span> <span class="kw">this</span>.score; }
+  <span id="gc3">login</span>()     { console.log(<span class="str">"login"</span>, <span class="kw">this</span>.a); }
+}
+
+<span class="kw">const</span> <span id="gc4">x</span> = <span class="kw">new</span> C(<span class="str">"test"</span>, 7);
+<span id="gc5">x.increment()</span>; <span class="cm">// 1</span>
+<span id="gc6">x.login()</span>;      <span class="cm">// "login test"</span>`,
+  steps:["class C defined — blueprint created","constructor runs when new C() called","increment → C.prototype automatically","login → C.prototype automatically","new C('test',7) — same 4 steps from Ch.23","x.increment()=1  x.login()→'login test'"],
+  hl:["gc0","gc1","gc2","gc3","gc4","gc5"],
+  frames:[
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"C constructor",t:"f-hof"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"new C('test',7)",t:"f-special"}],
+    [{l:"global()",t:"f-global"},{l:"x.increment()",t:"f-cb"}],
+  ],
+  flow:[
+    [{t:"d-input",i:"→",v:"class C defined"},{t:"d-special",i:"!",v:"C = constructor fn + C.prototype={increment,login}"}],
+    [{t:"d-input",i:"→",v:"constructor(a,b) — runs on new C()"},{t:"log-orange",i:">",v:"sets this.a, this.b, this.score on instance"}],
+    [{t:"d-special",i:"!",v:"increment → C.prototype.increment auto"},{t:"log-purple",i:"H",v:"shared — not copied per instance"}],
+    [{t:"d-special",i:"!",v:"login → C.prototype.login auto"},{t:"log-purple",i:"H",v:"C.prototype = {increment,login}"}],
+    [{t:"d-input",i:"→",v:"new C('test',7)"},{t:"d-transform",i:"⇒",v:"x={a:'test',b:7,score:0}  x.__proto__=C.prototype"}],
+    [{t:"d-transform",i:"⇒",v:"x.increment(): score 0→1"},{t:"log-orange",i:">",v:"> 1  then x.login() > 'login test'"}],
+  ],
+  mem:[
+    {g:[{k:"C",v:"class (fn+prototype)",s:"mv-new"},{k:"C.prototype",v:"{}"}],l:[],c:[]},
+    {g:[{k:"C",v:"class ref"},{k:"C.prototype",v:"{}"}],l:[{k:"this.a",v:"'test'",s:"mv-new"},{k:"this.b",v:"7",s:"mv-new"},{k:"this.score",v:"0",s:"mv-new"}],c:[]},
+    {g:[{k:"C",v:"class ref"},{k:"C.prototype",v:"{increment}",s:"mv-changed"}],l:[],c:[]},
+    {g:[{k:"C",v:"class ref"},{k:"C.prototype",v:"{increment,login}",s:"mv-changed"}],l:[],c:[]},
+    {g:[{k:"C",v:"class ref"},{k:"x",v:"{a:'test',b:7,score:0}",s:"mv-new"}],l:[],c:[{k:"x.__proto__",v:"→ C.prototype",s:"mv-new"}]},
+    {g:[{k:"x",v:"{a:'test',b:7,score:1}",s:"mv-changed"}],l:[{k:"walk",v:"→ C.prototype.increment",s:"mv-changed"}],c:[{k:"x.__proto__",v:"→ C.prototype"}]},
+  ],
+}]
+},
+{num:25,title:"Generators",tag:"function* · yield · .next() · controlled iteration",
+concept:"A <strong>generator</strong> is a function that can pause its own execution, save state, return a value, and resume exactly where it left off. Declare with <code>function*</code>. Calling it returns a <strong>generator object</strong> — the body doesn't run yet. Call <code>.next()</code> to run until the next <code>yield</code>, which pauses it. <code>yield</code> is not <code>return</code>: return ends the function permanently; yield pauses it while saving all local state. <code>.next(value)</code> sends a value <em>into</em> the generator — your notes showed this as <code>genX1.send('Hello')</code>.",
+callout:null,
+refs:[
+  {lbl:"return",cls:"",title:"Ends permanently",sub:"state destroyed"},
+  {lbl:"yield",cls:"",title:"Pauses + saves",sub:"resumes on .next()"},
+],
+memPanelTitle:"Generator state",
+legend:[{color:"var(--purple)",label:"Generator fn"},{color:"var(--green)",label:"Resumed"},{color:"var(--orange)",label:"yield / paused"}],
+examples:[{
+  name:"function* and yield — step by step",
+  desc:"Calling a generator returns an object — the body does not run. Each <code>.next()</code> runs until the next <code>yield</code>, returns <code>{value, done}</code>, and pauses.",
+  code:`<span class="kw">function</span>* <span id="gc0">gen</span>() {
+  console.log(<span class="str" id="gc1">"start"</span>);
+  <span id="gc2"><span class="kw">yield</span></span> <span class="str">"first"</span>;
+  console.log(<span class="str" id="gc3">"middle"</span>);
+  <span id="gc4"><span class="kw">yield</span></span> <span class="str">"second"</span>;
+  console.log(<span class="str" id="gc5">"end"</span>);
+}
+
+<span class="kw">const</span> <span id="gc6">g</span> = gen(); <span class="cm">// body NOT run yet</span>
+
+g.<span id="gc7">next</span>(); <span class="cm">// {value:"first",  done:false}</span>
+g.<span id="gc8">next</span>(); <span class="cm">// {value:"second", done:false}</span>
+g.<span id="gc9">next</span>(); <span class="cm">// {value:undefined,done:true}</span>`,
+  steps:["gen defined — body NOT run","g = gen() — generator object returned","g.next() — runs until first yield","paused — state saved, {value:'first',done:false}","g.next() — resumes, runs to second yield","g.next() — runs to end, {done:true}"],
+  hl:["gc0","gc6","gc7","gc2","gc8","gc9"],
+  frames:[
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"gen()",t:"f-hof"}],
+    [{l:"global()",t:"f-global"},{l:"gen() — paused",t:"f-special"}],
+    [{l:"global()",t:"f-global"},{l:"gen() — resumed",t:"f-cb"}],
+    [{l:"global()",t:"f-global"},{l:"gen() — complete",t:"f-active"}],
+  ],
+  flow:[
+    [{t:"d-input",i:"→",v:"function* gen defined"}],
+    [{t:"d-input",i:"→",v:"g = gen()"},{t:"d-special",i:"!",v:"generator object created — body NOT run yet"}],
+    [{t:"d-input",i:"→",v:"g.next() — first call"},{t:"d-transform",i:"⇒",v:"runs: 'start' logged → hits yield 'first'"},{t:"log-orange",i:">",v:'> "start"  returns {value:"first",done:false}'}],
+    [{t:"d-special",i:"!",v:"paused at first yield — state saved"},{t:"log-purple",i:"H",v:"suspended — waiting for next .next()"}],
+    [{t:"d-input",i:"→",v:"g.next() — second call"},{t:"d-transform",i:"⇒",v:"resumes: 'middle' → yield 'second'"},{t:"log-orange",i:">",v:'> "middle"  returns {value:"second",done:false}'}],
+    [{t:"d-input",i:"→",v:"g.next() — third call"},{t:"d-transform",i:"⇒",v:"resumes: 'end' → function ends"},{t:"log-orange",i:">",v:'> "end"  returns {value:undefined,done:true}'}],
+  ],
+  mem:[
+    {g:[{k:"gen",v:"fn* ref"}],l:[],c:[]},
+    {g:[{k:"g",v:"generator obj",s:"mv-new"}],l:[],c:[{k:"state",v:"suspended (not started)",s:"mv-special"}]},
+    {g:[{k:"g",v:"generator obj"}],l:[],c:[{k:"state",v:"running → yield 'first'",s:"mv-changed"}]},
+    {g:[{k:"g",v:"generator obj"}],l:[],c:[{k:"state",v:"paused at yield 1",s:"mv-special"},{k:"value",v:"'first'",s:"mv-new"}]},
+    {g:[{k:"g",v:"generator obj"}],l:[],c:[{k:"state",v:"running → yield 'second'",s:"mv-changed"},{k:"value",v:"'second'",s:"mv-changed"}]},
+    {g:[{k:"g",v:"generator obj"}],l:[],c:[{k:"state",v:"done: true",s:"mv-changed"},{k:"value",v:"undefined"}]},
+  ],
+}]
+},
+{num:26,title:"Functional JS & composition",tag:"map · reduce · pipe · compose",
+concept:"Functional JS composes smaller, predictable pure functions into complex behaviour. Your notes: <em>'sum of parts = total @ better'</em>. <strong>Map</strong>: transform each element of an array into a new one. <strong>Reduce</strong>: reduce multiple operations into condensed, composed/simplified code — your note said 'passing multiple functions into a reduce function which composes out a desired output.' That is <code>pipe</code>: <code>fns.reduce((acc,fn)=>fn(acc), x)</code>. <strong>Compose</strong> is the same in reverse (right-to-left).",
+callout:{type:"callout-green",text:"'Sum of parts = total @ better' — your notes. Function composition is cooking: each small function is an ingredient. Combined in the right order they produce something better than any part alone."},
+refs:[],
+memPanelTitle:"Pipeline state",
+legend:[{color:"var(--purple)",label:"HOF / pipeline"},{color:"var(--green)",label:"Pure function"},{color:"var(--orange)",label:"Composition step"}],
+examples:[{
+  name:"pipe — passing fns into reduce",
+  desc:"Your exact note: 'passing multiple functions into a reduce function which composes out a desired output.' <code>pipe</code> is literally <code>fns.reduce((acc,fn)=>fn(acc), x)</code>.",
+  code:`<span class="kw">const</span> <span id="gc0">double</span>    = x => x * 2;
+<span class="kw">const</span> <span id="gc1">addTen</span>   = x => x + 10;
+<span class="kw">const</span> <span id="gc2">toString</span> = x => <span class="str">\`result:\${x}\`</span>;
+
+<span class="cm">// pipe — left to right, built with reduce</span>
+<span class="kw">function</span> <span id="gc3">pipe</span>(...fns) {
+  <span class="kw">return</span> (x) => fns.<span id="gc4">reduce</span>(
+    (acc, fn) => <span id="gc5">fn(acc)</span>, x
+  );
+}
+
+<span class="kw">const</span> <span id="gc6">process</span> = pipe(double, addTen, toString);
+process(5);
+<span class="cm">// 5→double→10→addTen→20→toString→"result:20"</span>`,
+  steps:["Small pure functions defined","pipe = fns.reduce((acc,fn)=>fn(acc), x)","process = pipe(double,addTen,toString)","process(5) — reduce starts, acc=5","double(5)=10 → addTen(10)=20","toString(20)='result:20'"],
+  hl:["gc0","gc3","gc6","gc4","gc5","gc5"],
+  frames:[
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"pipe(double,addTen,toString)",t:"f-hof"}],
+    [{l:"global()",t:"f-global"},{l:"process(5)",t:"f-hof"},{l:"fns.reduce()",t:"f-special"}],
+    [{l:"global()",t:"f-global"},{l:"process(5)",t:"f-hof"},{l:"double(5)",t:"f-cb"}],
+    [{l:"global()",t:"f-global"},{l:"process(5)",t:"f-hof"},{l:"toString(20)",t:"f-active"}],
+  ],
+  flow:[
+    [{t:"d-input",i:"→",v:"double, addTen, toString — pure fns"},{t:"log-purple",i:"H",v:"each does one thing only"}],
+    [{t:"d-input",i:"→",v:"pipe(...fns)"},{t:"d-special",i:"!",v:"internally: fns.reduce((acc,fn)=>fn(acc), x)"},{t:"log-purple",i:"H",v:"fns is the array, reduce is the combiner"}],
+    [{t:"d-input",i:"→",v:"process=pipe(double,addTen,toString)"},{t:"d-special",i:"!",v:"closure: fns=[double,addTen,toString]"},{t:"log-purple",i:"H",v:"pipeline assembled — not run yet"}],
+    [{t:"d-input",i:"→",v:"process(5) — reduce: acc=5"},{t:"log-orange",i:">",v:"reduce walks fns with data as accumulator"}],
+    [{t:"d-input",i:"→",v:"fn=double: acc=double(5)=10"},{t:"d-transform",i:"⇒",v:"fn=addTen: acc=addTen(10)=20"}],
+    [{t:"d-special",i:"!",v:"fn=toString: acc='result:20'"},{t:"d-output",i:"←",v:"'result:20'"},{t:"log-orange",i:">",v:"sum of parts = total @ better"}],
+  ],
+  mem:[
+    {g:[{k:"double",v:"x=>x*2"},{k:"addTen",v:"x=>x+10"},{k:"toString",v:"x=>`result:${x}`"}],l:[],c:[]},
+    {g:[{k:"pipe",v:"fn ref",s:"mv-new"}],l:[],c:[]},
+    {g:[{k:"process",v:"fn (pipeline)",s:"mv-new"}],l:[],c:[{k:"fns",v:"[double,addTen,toString]",s:"mv-new"}]},
+    {g:[{k:"process",v:"fn (pipeline)"}],l:[{k:"x",v:"5"},{k:"acc",v:"5 (initial)",s:"mv-new"}],c:[]},
+    {g:[{k:"process",v:"fn (pipeline)"}],l:[{k:"acc",v:"5→10→20",s:"mv-changed"}],c:[]},
+    {g:[{k:"process",v:"fn (pipeline)"}],l:[{k:"acc",v:"'result:20'",s:"mv-changed"}],c:[]},
+  ],
+}]
+},
+{num:27,title:"Partial application & currying",tag:"parameterization · specialised fns · auth tokens",
+concept:"Your notes labelled both as the <strong>Parameterization Concept</strong>: 'lego blocking function arguments.' <strong>Partial application</strong> fixes a/some arguments based on use case to create specialised functions. <strong>Currying</strong> transforms a multi-arg function into a sequence of single-arg functions — 'multiple arguments into a sequence of functions.' Your example: different function argument assembly value for different auth tokens — fix the token once, pipe in the data later.",
+callout:{type:"callout-purple",text:"Parameterization Concept — lego blocking function arguments: fixing a/some argument based on use case to create specialised functions. Currying → piping sequence of arguments for lego functionality. — your notes"},
+refs:[
+  {lbl:"Partial",cls:"",title:"Fix some args now",sub:"f(a,b,c) → partial(a) → g(b,c)"},
+  {lbl:"Currying",cls:"",title:"One arg at a time",sub:"f(a,b,c) → a => b => c => result"},
+],
+memPanelTitle:"Fixed args (closure)",
+legend:[{color:"var(--purple)",label:"Outer (factory)"},{color:"var(--green)",label:"Specialised fn"},{color:"var(--orange)",label:"Fixed arg in closure"}],
+examples:[{
+  name:"Auth token example — your notes",
+  desc:"Fix the token once, pipe in different user IDs and endpoints. Three levels of currying — exactly 'piping a sequence of arguments for lego functionality.'",
+  code:`<span class="cm">// Curried — one arg at a time</span>
+<span class="kw">const</span> <span id="gc0">withAuth</span> = token => userId => endpoint =>
+  <span class="str">\`Bearer \${token}: GET /users/\${userId}\${endpoint}\`</span>;
+
+<span class="cm">// Fix token once — backpack: {token}</span>
+<span class="kw">const</span> <span id="gc1">useToken</span> = withAuth(<span class="str">"abc123"</span>);
+
+<span class="cm">// Fix userId — backpack: {token, userId}</span>
+<span class="kw">const</span> <span id="gc2">forUser1</span> = useToken(1);
+<span class="kw">const</span> <span id="gc3">forUser2</span> = useToken(2);
+
+<span class="cm">// Supply endpoint — compute result</span>
+<span id="gc4">forUser1</span>(<span class="str">"/profile"</span>);
+<span class="cm">// "Bearer abc123: GET /users/1/profile"</span>
+<span id="gc5">forUser2</span>(<span class="str">"/settings"</span>);
+<span class="cm">// "Bearer abc123: GET /users/2/settings"</span>`,
+  steps:["withAuth = token => userId => endpoint => ...","useToken = withAuth('abc123') — token fixed","forUser1 = useToken(1) — userId=1 fixed","forUser2 = useToken(2) — userId=2 fixed","forUser1('/profile') — all 3 args, result","forUser2('/settings') — different user"],
+  hl:["gc0","gc1","gc2","gc3","gc4","gc5"],
+  frames:[
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"withAuth('abc123')",t:"f-hof"}],
+    [{l:"global()",t:"f-global"},{l:"useToken(1)",t:"f-hof"}],
+    [{l:"global()",t:"f-global"},{l:"useToken(2)",t:"f-hof"}],
+    [{l:"global()",t:"f-global"},{l:"forUser1('/profile')",t:"f-active"}],
+    [{l:"global()",t:"f-global"},{l:"forUser2('/settings')",t:"f-active"}],
+  ],
+  flow:[
+    [{t:"d-input",i:"→",v:"withAuth = token => userId => endpoint => ..."},{t:"log-purple",i:"H",v:"3-level curry: one arg at a time"}],
+    [{t:"d-input",i:"→",v:"withAuth('abc123')"},{t:"d-special",i:"!",v:"token='abc123' fixed in closure"},{t:"log-orange",i:">",v:"useToken = userId => endpoint => ..."}],
+    [{t:"d-input",i:"→",v:"useToken(1)"},{t:"d-special",i:"!",v:"userId=1 fixed in closure"},{t:"log-orange",i:">",v:"forUser1 = endpoint => ..."}],
+    [{t:"d-input",i:"→",v:"useToken(2)"},{t:"d-special",i:"!",v:"userId=2 fixed in closure"},{t:"log-orange",i:">",v:"forUser2 = endpoint => ..."}],
+    [{t:"d-input",i:"→",v:"forUser1('/profile')"},{t:"d-transform",i:"⇒",v:"token+userId+endpoint all available"},{t:"d-output",i:"←",v:"> 'Bearer abc123: GET /users/1/profile'"}],
+    [{t:"d-input",i:"→",v:"forUser2('/settings')"},{t:"d-output",i:"←",v:"> 'Bearer abc123: GET /users/2/settings'"}],
+  ],
+  mem:[
+    {g:[{k:"withAuth",v:"token=>userId=>endpoint=>..."}],l:[],c:[]},
+    {g:[{k:"useToken",v:"userId=>endpoint=>...",s:"mv-new"}],l:[],c:[{k:"token",v:"'abc123' (fixed)",s:"mv-special"}]},
+    {g:[{k:"useToken",v:"..."},{k:"forUser1",v:"endpoint=>...",s:"mv-new"}],l:[],c:[{k:"token",v:"'abc123'"},{k:"u1.userId",v:"1 (fixed)",s:"mv-special"}]},
+    {g:[{k:"forUser1",v:"endpoint=>..."},{k:"forUser2",v:"endpoint=>...",s:"mv-new"}],l:[],c:[{k:"token",v:"'abc123'"},{k:"u1.userId",v:"1"},{k:"u2.userId",v:"2 (fixed)",s:"mv-special"}]},
+    {g:[{k:"forUser1",v:"endpoint=>..."}],l:[{k:"endpoint",v:"'/profile'"},{k:"result",v:"'Bearer abc123...'",s:"mv-new"}],c:[]},
+    {g:[{k:"forUser2",v:"endpoint=>..."}],l:[{k:"endpoint",v:"'/settings'"},{k:"result",v:"'Bearer abc123...'",s:"mv-new"}],c:[]},
+  ],
+}]
+},
+{num:28,title:"The module pattern",tag:"IIFE · revealing module · ES6 import/export",
+concept:"The <strong>module pattern</strong> solves a fundamental problem: keep code organised, prevent name collisions, and control what is public vs private. It's a direct application of everything you've learned — a closure (Ch.7) that encapsulates private state (Ch.18) and exposes a controlled public interface. An IIFE runs once, creates private scope, and returns the public API. Modern ES6 <code>import</code>/<code>export</code> does the same at the file level — every JS file is its own module scope.",
+callout:null,refs:[],
+memPanelTitle:"Module memory",
+legend:[{color:"var(--purple)",label:"Module scope"},{color:"var(--green)",label:"Public API"},{color:"var(--orange)",label:"Private (closure)"}],
+examples:[{
+  name:"IIFE — the module pattern",
+  desc:"An Immediately Invoked Function Expression creates a private scope and returns a public API. Private variables live in the closure forever — accessible only through the returned methods.",
+  code:`<span class="kw">const</span> <span id="gc0">counter</span> = (<span class="kw">function</span>() {
+  <span class="cm">// PRIVATE — inaccessible from outside</span>
+  <span class="kw">let</span> <span id="gc1">count</span> = 0;
+  <span class="kw">const</span> <span id="gc2">log</span> = () => console.log(<span class="str">"count:"</span>, count);
+
+  <span class="cm">// PUBLIC API — what gets returned</span>
+  <span class="kw">return</span> {
+    <span id="gc3">increment</span>() { count++; log(); },
+    <span id="gc4">decrement</span>() { count--; log(); },
+    <span id="gc5">getCount</span>()  { <span class="kw">return</span> count; }
+  };
+})(); <span class="cm">// ← invoked immediately</span>
+
+counter.<span id="gc6">increment</span>(); <span class="cm">// count: 1</span>
+counter.increment();  <span class="cm">// count: 2</span>
+<span class="cm">// counter.count → undefined (private!)</span>`,
+  steps:["IIFE defined and immediately invoked","Private scope: count=0, log=fn","Public API object returned as counter","counter.increment() — accesses private count","count: 0→1→2 — closure persists","counter.count → undefined — truly private"],
+  hl:["gc0","gc1","gc5","gc3","gc6","gc1"],
+  frames:[
+    [{l:"global()",t:"f-global"},{l:"IIFE()",t:"f-special"}],
+    [{l:"global()",t:"f-global"},{l:"IIFE()",t:"f-special"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"counter.increment()",t:"f-cb"}],
+    [{l:"global()",t:"f-global"},{l:"counter.increment()",t:"f-active"}],
+    [{l:"global()",t:"f-global"}],
+  ],
+  flow:[
+    [{t:"d-input",i:"→",v:"(function(){ ... })()"},{t:"d-special",i:"!",v:"IIFE — runs once, private scope created"}],
+    [{t:"d-input",i:"→",v:"count=0, log=fn — PRIVATE"},{t:"d-special",i:"!",v:"only increment/decrement/getCount can touch count"}],
+    [{t:"d-output",i:"←",v:"counter = {increment,decrement,getCount}"},{t:"log-green",i:"f",v:"public API — 3 methods, nothing else visible"}],
+    [{t:"d-input",i:"→",v:"counter.increment()"},{t:"d-transform",i:"⇒",v:"count++ via closure — log() called"},{t:"log-orange",i:">",v:'> "count: 1"'}],
+    [{t:"d-transform",i:"⇒",v:"count: 1→2"},{t:"log-orange",i:">",v:'> "count: 2"  private state persists'}],
+    [{t:"d-input",i:"→",v:"counter.count"},{t:"d-special",i:"!",v:"not on returned object → undefined"},{t:"log-purple",i:"H",v:"private is truly private — closure protects it"}],
+  ],
+  mem:[
+    {g:[{k:"counter",v:"(IIFE running...)"}],l:[],c:[]},
+    {g:[{k:"counter",v:"(IIFE running...)"}],l:[],c:[{k:"count",v:"0 (private)",s:"mv-special"},{k:"log",v:"fn (private)",s:"mv-special"}]},
+    {g:[{k:"counter",v:"{increment,decrement,getCount}",s:"mv-new"}],l:[],c:[{k:"count",v:"0 (private)",s:"mv-special"},{k:"log",v:"fn (private)",s:"mv-special"}]},
+    {g:[{k:"counter",v:"{increment,decrement,getCount}"}],l:[{k:"this",v:"counter"}],c:[{k:"count",v:"1",s:"mv-changed"}]},
+    {g:[{k:"counter",v:"{increment,decrement,getCount}"}],l:[],c:[{k:"count",v:"2",s:"mv-changed"}]},
+    {g:[{k:"counter",v:"{increment,decrement,getCount}"},{k:"counter.count",v:"undefined",s:"mv-changed"}],l:[],c:[{k:"count",v:"2 (sealed)"}]},
+  ],
+}]
+},
+{num:29,title:"Type coercion",tag:"implicit · == vs === · truthy/falsy · NaN",
+concept:"JavaScript automatically converts values between types when operators or comparisons need it — <strong>implicit type coercion</strong>. The <code>+</code> operator prefers strings (concatenates if either side is a string). Arithmetic operators (<code>-</code>, <code>*</code>, <code>/</code>) prefer numbers. <code>==</code> (loose equality) coerces before comparing; <code>===</code> (strict) never does. The 6 falsy values: <code>false, 0, '', null, undefined, NaN</code>. Everything else is truthy — including <code>'0'</code> and <code>[]</code>.",
+callout:null,
+refs:[
+  {lbl:"+ operator",cls:"",title:"Prefers string",sub:'"5"+3 = "53"'},
+  {lbl:"- * / ops",cls:"",title:"Prefer number",sub:'"5"-3 = 2'},
+  {lbl:"== loose",cls:"",title:"Coerces first",sub:'0=="0" → true'},
+  {lbl:"=== strict",cls:"",title:"No coercion",sub:'0==="0" → false'},
+],
+memPanelTitle:"Type conversions",
+legend:[{color:"var(--purple)",label:"Original type"},{color:"var(--green)",label:"Coerced value"},{color:"var(--orange)",label:"Result"},{color:"var(--red)",label:"Gotcha"}],
+examples:[{
+  name:"+ operator and form input bug",
+  desc:"When either operand of <code>+</code> is a string, the other converts to string too. Classic bug: form inputs are always strings.",
+  code:`<span class="cm">// + with a string → concatenation</span>
+<span id="gc0"><span class="str">"5"</span> + 3</span>;      <span class="cm">// "53"  not 8!</span>
+<span id="gc1">3 + <span class="str">"5"</span></span>;      <span class="cm">// "35"</span>
+
+<span class="cm">// Real bug: form inputs are strings</span>
+<span class="kw">const</span> <span id="gc2">a</span> = <span class="str">"10"</span>; <span class="cm">// from input.value</span>
+<span class="kw">const</span> <span id="gc3">b</span> = <span class="str">"5"</span>;
+<span id="gc4">a + b</span>;           <span class="cm">// "105" ← bug!</span>
+
+<span class="cm">// Fix: explicit conversion</span>
+<span id="gc5">Number(a) + Number(b)</span>; <span class="cm">// 15 ✓</span>
++a + +b;                <span class="cm">// 15 ✓  unary +</span>
+
+<span class="cm">// But arithmetic ops prefer numbers</span>
+<span id="gc6"><span class="str">"10"</span> - <span class="str">"5"</span></span>; <span class="cm">// 5  (both coerced to number)</span>`,
+  steps:['"5"+3 — string+number → coerce 3 to "3"','"53" — concatenated, not added','a="10",b="5" — strings from form inputs','a+b = "105" — string concatenation bug!','Number(a)+Number(b) = 15 — explicit fix','"10"-"5" = 5 — arithmetic prefers numbers'],
+  hl:["gc0","gc0","gc2","gc4","gc5","gc6"],
+  frames:[
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"coerce: 3→'3'",t:"f-special"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"+ operator",t:"f-special"}],
+    [{l:"global()",t:"f-global"},{l:"Number(a)+Number(b)",t:"f-active"}],
+    [{l:"global()",t:"f-global"},{l:"coerce: '10'→10",t:"f-cb"}],
+  ],
+  flow:[
+    [{t:"d-input",i:"→",v:'"5" + 3'},{t:"d-special",i:"!",v:"+ prefers string → coerce 3 to '3'"}],
+    [{t:"d-special",i:"!",v:'"5"+"3" → concat'},{t:"d-output",i:"←",v:'"53"  (not 8!)'},{t:"log-special",i:"!",v:"gotcha: looks like addition, is concatenation"}],
+    [{t:"d-input",i:"→",v:'a="10" (string), b="5" (string)'},{t:"d-special",i:"!",v:"form inputs are ALWAYS strings"}],
+    [{t:"d-input",i:"→",v:"a + b"},{t:"d-special",i:"!",v:'both strings → "105"'},{t:"d-output",i:"←",v:'"105" ← real bug'}],
+    [{t:"d-input",i:"→",v:"Number(a)+Number(b)"},{t:"d-transform",i:"⇒",v:'"10"→10, "5"→5, 10+5=15'},{t:"d-output",i:"←",v:"> 15 ✓"}],
+    [{t:"d-input",i:"→",v:'"10"-"5"'},{t:"d-transform",i:"⇒",v:"- prefers numbers → both coerced"},{t:"d-output",i:"←",v:"> 5 ✓"}],
+  ],
+  mem:[
+    {g:[{k:'"5"+3',v:"string+number",s:"mv-special"}],l:[],c:[]},
+    {g:[{k:'"5"+3',v:'"53"',s:"mv-changed"}],l:[{k:"coerce",v:'3→"3"',s:"mv-special"}],c:[]},
+    {g:[{k:"a",v:'"10" (string!)',s:"mv-special"},{k:"b",v:'"5" (string!)',s:"mv-special"}],l:[],c:[]},
+    {g:[{k:"a+b",v:'"105" (BUG)',s:"mv-special"}],l:[{k:"coerce",v:"both strings → concat",s:"mv-special"}],c:[]},
+    {g:[{k:"Number(a)+Number(b)",v:"15 ✓",s:"mv-changed"}],l:[{k:"explicit",v:'"10"→10, "5"→5',s:"mv-new"}],c:[]},
+    {g:[{k:'"10"-"5"',v:"5 ✓",s:"mv-new"}],l:[{k:"coerce",v:"both → number",s:"mv-new"}],c:[]},
+  ],
+}]
+},
+{num:30,title:"Metaprogramming",tag:"Proxy · Reflect · Symbol · intercept operations",
+concept:"<strong>Metaprogramming</strong> is writing code that operates on other code — intercepting, redefining, or inspecting JS operations at the language level. <strong>Symbol</strong> creates unique, non-string property keys and hooks into built-in protocols (like making an object iterable). <strong>Proxy</strong> wraps any object and intercepts fundamental operations — reads, writes, deletions — via handler traps. <strong>Reflect</strong> provides the default implementations of those same operations, so you can intercept, do custom logic, then forward to the default. Vue 3's reactivity system is built on Proxy + Reflect.",
+callout:null,
+refs:[
+  {lbl:"Symbol",cls:"",title:"Unique key",sub:"Symbol('id')!==Symbol('id')"},
+  {lbl:"Proxy",cls:"",title:"Intercept ops",sub:"get/set/delete traps"},
+  {lbl:"Reflect",cls:"",title:"Default ops",sub:"Reflect.get/set/has"},
+  {lbl:"Use cases",cls:"",title:"Validation · reactive",sub:"logging · virtual props"},
+],
+memPanelTitle:"Proxy/Reflect state",
+legend:[{color:"var(--purple)",label:"Target object"},{color:"var(--green)",label:"Trap intercepted"},{color:"var(--orange)",label:"Custom logic"},{color:"var(--red)",label:"Reflect (default)"}],
+examples:[{
+  name:"Proxy — intercepting get and set",
+  desc:"<code>new Proxy(target, handler)</code> wraps any object. The handler's <code>get</code> and <code>set</code> traps intercept every property read and write. This is how Vue 3 reactivity works.",
+  code:`<span class="kw">const</span> <span id="gc0">target</span> = { name: <span class="str">"Alice"</span>, age: 30 };
+
+<span class="kw">const</span> <span id="gc1">handler</span> = {
+  <span id="gc2">get</span>(target, key) {
+    console.log(<span class="str">\`reading: \${key}\`</span>);
+    <span class="kw">return</span> Reflect.get(target, key);
+  },
+  <span id="gc3">set</span>(target, key, value) {
+    <span class="kw">if</span> (key === <span class="str">"age"</span> && value < 0)
+      <span class="kw">throw new</span> Error(<span class="str">"Age must be ≥ 0"</span>);
+    console.log(<span class="str">\`setting:\${key}=\${value}\`</span>);
+    <span class="kw">return</span> Reflect.set(target, key, value);
+  }
+};
+
+<span class="kw">const</span> <span id="gc4">proxy</span> = <span class="kw">new</span> Proxy(target, handler);
+<span id="gc5">proxy.name</span>;      <span class="cm">// get trap fires</span>
+<span id="gc6">proxy.age = 31</span>; <span class="cm">// set trap fires</span>`,
+  steps:["target object — real data","handler — defines traps (interceptors)","get trap — intercept, log, Reflect.get","set trap — validate, log, Reflect.set","proxy.name — get trap intercepts","proxy.age=31 — set trap validates and sets"],
+  hl:["gc0","gc1","gc2","gc3","gc5","gc6"],
+  frames:[
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"}],
+    [{l:"global()",t:"f-global"},{l:"get trap",t:"f-special"}],
+    [{l:"global()",t:"f-global"},{l:"set trap",t:"f-special"}],
+  ],
+  flow:[
+    [{t:"d-input",i:"→",v:"target = {name:'Alice',age:30}"},{t:"log-purple",i:"H",v:"real object — proxy wraps it"}],
+    [{t:"d-input",i:"→",v:"handler = {get:fn, set:fn}"},{t:"d-special",i:"!",v:"traps defined — intercept get and set"}],
+    [{t:"d-input",i:"→",v:"get trap: console.log → Reflect.get"},{t:"d-special",i:"!",v:"intercept → custom logic → forward to default"}],
+    [{t:"d-input",i:"→",v:"set trap: validate age≥0 → Reflect.set"},{t:"d-special",i:"!",v:"validation layer — no changes to original code"}],
+    [{t:"d-input",i:"→",v:"proxy.name"},{t:"d-special",i:"!",v:"get trap fires"},{t:"log-orange",i:">",v:'> "reading: name"  returns "Alice"'}],
+    [{t:"d-input",i:"→",v:"proxy.age = 31"},{t:"d-special",i:"!",v:"set trap fires: 31≥0 ✓ → Reflect.set"},{t:"log-orange",i:">",v:'> "setting:age=31"  target.age updated'}],
+  ],
+  mem:[
+    {g:[{k:"target",v:"{name:'Alice',age:30}",s:"mv-new"}],l:[],c:[]},
+    {g:[{k:"target",v:"{name:'Alice',age:30}"},{k:"handler",v:"{get:trap,set:trap}",s:"mv-new"}],l:[],c:[]},
+    {g:[{k:"target",v:"{name:'Alice',age:30}"},{k:"proxy",v:"Proxy(target)",s:"mv-new"}],l:[{k:"get",v:"intercept→log→Reflect",s:"mv-special"}],c:[]},
+    {g:[{k:"target",v:"{name:'Alice',age:30}"}],l:[{k:"set",v:"validate→log→Reflect",s:"mv-special"}],c:[]},
+    {g:[{k:"target",v:"{name:'Alice',age:30}"}],l:[{k:"reading",v:"'name'",s:"mv-new"},{k:"return",v:"'Alice'",s:"mv-new"}],c:[]},
+    {g:[{k:"target",v:"{name:'Alice',age:31}",s:"mv-changed"}],l:[{k:"setting",v:"'age'=31",s:"mv-special"}],c:[]},
+  ],
+}]
+},
+];
+
+// ── ENGINE ──────────────────────────────────────────
+let curCh=0,curEx=0,curStep=-1,autoTimer=null;
+const ch=()=>CHAPTERS[curCh];
+const ex=()=>ch().examples[curEx];
+
+function buildNav(){
+  // Tab bar
+  document.getElementById('ch-tabs').innerHTML=CHAPTERS.map((c,i)=>
+    `<div class="ch-tab${i===curCh?' active':' done'}" onclick="loadChapter(${i})">Ch.${c.num} ${c.title}</div>`
+  ).join('');
+  // Sidebar
+  document.getElementById('side-list').innerHTML=CHAPTERS.map((c,i)=>
+    `<div class="sideitem${i===curCh?' active':' done'}" onclick="loadChapter(${i});closeSidebar()">
+      <div class="si-num">${c.num}</div>
+      <div class="si-info"><div class="si-title">${c.title}</div><div class="si-tag">${c.tag}</div></div>
+    </div>`
+  ).join('');
+  // Scroll active tab into view
+  setTimeout(()=>{
+    const at=document.querySelector('.ch-tab.active');
+    if(at)at.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+    const as=document.querySelector('.sideitem.active');
+    if(as)as.scrollIntoView({block:'nearest'});
+  },50);
+}
+
+function loadChapter(i){
+  stopAuto();curCh=i;curEx=0;curStep=-1;
+  buildNav();
+  const c=ch();
+  document.getElementById('hdr-badge').textContent='Ch. '+c.num;
+  document.getElementById('hdr-title').textContent=c.title;
+  document.getElementById('concept-text').innerHTML=c.concept;
+  document.getElementById('mem-panel-title').textContent=c.memPanelTitle||'Memory';
+  // Callout
+  const ca=document.getElementById('callout-area');
+  ca.innerHTML=c.callout?`<div class="callout ${c.callout.type}">${c.callout.text}</div>`:'';
+  // Refs
+  const ra=document.getElementById('ref-area');
+  ra.innerHTML=c.refs&&c.refs.length?`<div class="ref-row">${c.refs.map(r=>`<div class="ref-card"><div class="ref-lbl">${r.lbl}</div><div class="ref-title">${r.title}</div><div class="ref-sub">${r.sub}</div></div>`).join('')}</div>`:'';
+  // Legend
+  document.getElementById('legend').innerHTML=(c.legend||[]).map(l=>`<div class="leg-item"><div class="leg-dot" style="background:${l.color}"></div>${l.label}</div>`).join('');
+  document.getElementById('card-code').innerHTML=ex().code;
+  clearCards();updateExHeader();buildDots();
+  document.getElementById('main-body').scrollTop=0;
+}
+
+function updateExHeader(){
+  const e=ex();
+  document.getElementById('ex-name').textContent=e.name;
+  document.getElementById('ex-ctr').textContent=` ${curEx+1} of ${ch().examples.length}`;
+  document.getElementById('ex-desc').innerHTML=e.desc;
+  document.getElementById('ex-prev').disabled=curEx===0;
+  document.getElementById('ex-next').disabled=curEx===ch().examples.length-1;
+}
+
+function switchEx(dir){
+  const n=curEx+dir;
+  if(n<0||n>=ch().examples.length)return;
+  stopAuto();curEx=n;curStep=-1;
+  document.getElementById('card-code').innerHTML=ex().code;
+  clearCards();updateExHeader();buildDots();
+}
+
+function buildDots(){
+  document.getElementById('sdots').innerHTML=ex().steps.map((_,i)=>`<div class="sdot" id="sd${i}"></div>`).join('');
+  updateUI();
+}
+
+function updateUI(){
+  const total=ex().steps.length,s=curStep;
+  ex().steps.forEach((_,i)=>{
+    const d=document.getElementById('sd'+i);
+    if(d)d.className='sdot'+(i<s?' done':i===s?' cur':'');
+  });
+  document.getElementById('sctr').textContent=s<0?`0/${total}`:`${s+1}/${total}`;
+  document.getElementById('sdesc').textContent=s<0?'Press Next':(ex().steps[s]||'');
+  document.getElementById('btn-prev').disabled=s<=0;
+  document.getElementById('btn-next').disabled=s>=total-1;
+  if(s>=total-1&&autoTimer)stopAuto();
+}
+
+function renderStep(s){
+  const e=ex();
+  document.querySelectorAll('[id^="gc"]').forEach(el=>el.classList.remove('hl'));
+  const hid=e.hl[s];if(hid){const el=document.getElementById(hid);if(el)el.classList.add('hl');}
+  document.getElementById('card-stack').innerHTML=(e.frames[s]||[]).map(f=>`<div class="frame ${f.t} show">${f.l}</div>`).join('');
+  renderFlow(e.flow[s]||[]);
+  renderMem(e.mem[s]||{g:[],l:[],c:[]});
+  updateUI();
+}
+
+function renderFlow(items){
+  const all=items.filter(x=>x.t!=='log-item'&&!x.t.startsWith('log-')&&x.t!=='log-special');
+  const logs=items.filter(x=>x.t==='log-item'||x.t.startsWith('log-')||x.t==='log-special');
+  let h='';
+  if(all.length){
+    h+=`<div class="df-lbl">Data</div>`;
+    all.forEach(d=>{
+      const cls=d.t==='d-special'?'d-special':d.t==='d-transform'?'d-transform':d.t==='d-output'?'d-output':'d-input';
+      const icon=d.t==='d-special'?'!':d.t==='d-transform'?'⇒':d.t==='d-output'?'←':'→';
+      h+=`<div class="ditem ${cls} show"><div class="dicon">${icon}</div><div class="dtxt">${d.v}</div></div>`;
+    });
+  }
+  if(logs.length){
+    if(all.length)h+=`<div class="df-div"></div>`;
+    h+=`<div class="df-lbl">Console</div>`;
+    logs.forEach(l=>{
+      const cls=l.t==='log-special'?'d-special log-item':l.t||'log-item log-orange';
+      const icon=l.i||'>';
+      h+=`<div class="ditem log-item ${cls} show"><div class="dicon">${icon}</div><div class="dtxt">${l.v}</div></div>`;
+    });
+  }
+  document.getElementById('card-flow').innerHTML=h;
+}
+
+function renderMem(mem){
+  const secs=[
+    {k:'g',l:'Global',cls:'mt-global'},
+    {k:'l',l:'Local frame',cls:'mt-local'},
+    {k:'c',l:'Closure / backpack',cls:'mt-closure'},
+  ];
+  document.getElementById('card-mem').innerHTML=secs.map(sec=>{
+    const rows=mem[sec.k]||[];
+    return `<div class="memsec">
+      <span class="memtitle ${sec.cls}">${sec.l}</span>
+      <div class="memrows">${rows.length
+        ?rows.map(r=>`<div class="memrow show"><span class="memkey">${r.k}</span><span class="memval ${r.s||''}">${r.v}</span></div>`).join('')
+        :'<div class="mem-empty">— empty —</div>'
+      }</div>
+    </div>`;
+  }).join('');
+}
+
+function clearCards(){
+  ['card-stack','card-flow','card-mem'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='';});
+  document.querySelectorAll('[id^="gc"]').forEach(el=>el.classList.remove('hl'));
+}
+
+function nav(dir){
+  const total=ex().steps.length;
+  if(dir===1&&curStep<total-1){curStep++;renderStep(curStep);}
+  else if(dir===-1){
+    if(curStep>0){curStep--;renderStep(curStep);}
+    else if(curStep===0){curStep=-1;clearCards();updateUI();}
+  }
+}
+
+function stopAuto(){clearInterval(autoTimer);autoTimer=null;const b=document.getElementById('btn-auto');if(b)b.textContent='Auto-play';}
+function autoPlay(){
+  if(autoTimer){stopAuto();return;}
+  if(curStep>=ex().steps.length-1){curStep=-1;clearCards();buildDots();}
+  document.getElementById('btn-auto').textContent='Stop';
+  autoTimer=setInterval(()=>{
+    if(curStep>=ex().steps.length-1){stopAuto();return;}
+    curStep++;renderStep(curStep);
+  },850);
+}
+
+function toggleSidebar(){
+  const s=document.getElementById('sidebar');
+  s.classList.toggle('open');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;
+  if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nav(1);}
+  if(e.key==='ArrowLeft'){e.preventDefault();nav(-1);}
+  if(e.key==='ArrowUp'){e.preventDefault();switchEx(-1);}
+  if(e.key==='ArrowDown'){e.preventDefault();switchEx(1);}
+  if(e.key==='1'&&e.metaKey===false)loadChapter(Math.max(0,curCh-1));
+  if(e.key==='2'&&e.metaKey===false)loadChapter(Math.min(CHAPTERS.length-1,curCh+1));
+});
+
+// Init
+loadChapter(0);
+</script>
+</body>
+</html>
